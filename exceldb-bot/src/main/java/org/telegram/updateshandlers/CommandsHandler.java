@@ -69,11 +69,15 @@ public class CommandsHandler extends TelegramLongPollingCommandBot {
 
     @Override
     public String getBotUsername() {
+        BotConfig botConfig = new BotConfig();
+
         return botConfig.getUser();
     }
 
     @Override
     public String getBotToken() {
+        BotConfig botConfig = new BotConfig();
+
         return botConfig.getToken();
     }
 }

@@ -19,7 +19,7 @@ public class HasEntryCommand extends BotCommand {
     private static final String LOGTAG = "HASENTRYCOMMAND";
 
     public HasEntryCommand() {
-        super("hasEntry", "Check if database contains company name or company url already, if found returns it");
+        super("hasEntry", "Check if database contains company name or company url already, if found returns them. e.g /hasentry google");
     }
 
     @Override
@@ -39,15 +39,22 @@ public class HasEntryCommand extends BotCommand {
 
             if (arguments != null && arguments.length > 0) {
                 String entry = arguments[0];
+
+                System.out.println(String.format("hasEntry %s from %s", entry, user.getUserName()));
+
                 List<Row> rows = excelHelper.hasEntry(botConfig.getExcel(), entry);
 
                 if (rows.size() > 0) {
                     answer.setText(ExcelHelper.toString(rows));
                     absSender.sendMessage(answer);
                 } else {
-                    answer.setText("Found no entries '"+entry+"' you may want to add this entry using /addEntry [name] [categorie] [subcategorie] [url]");
+                    answer.setText("Found no entries " + entry + "you may want to add this entry using /addEntry [name] [categorie] [subcategorie] [url]");
                     absSender.sendMessage(answer);
                 }
+            }
+            else {
+                answer.setText("Provide at least a search pattern, e.g /hasentry google");
+                absSender.sendMessage(answer);
             }
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);

@@ -83,16 +83,21 @@ public class ExcelHelper {
         StringBuilder str = new StringBuilder();
 
         //Telegram has a max size message limit
+        boolean displayAll = true;
+
         if (rows.size() > 5) {
-            rows = rows.subList(0, 5);
+            displayAll = false;
+            str.append("Too much results (" + rows.size() + "), displaying in condensed form\n\n");
         }
         for (Row row : rows) {
             appendIfNotNull(str, row.getCell(NAME_COLUMN_INDEX));
             appendIfNotNull(str, row.getCell(CATEGORY_COLUMN_INDEX));
             appendIfNotNull(str, row.getCell(SUBCATEGORY_COLUMN_INDEX));
             appendIfNotNull(str, row.getCell(URL_COLUMN_INDEX));
-            appendIfNotNull(str, row.getCell(MOTTO_COLUMN_INDEX));
-            appendIfNotNull(str, row.getCell(DESCRIPTION_COLUMN_INDEX));
+            if (displayAll) {
+                appendIfNotNull(str, row.getCell(MOTTO_COLUMN_INDEX));
+                appendIfNotNull(str, row.getCell(DESCRIPTION_COLUMN_INDEX));
+            }
 
             str.append("\n\n");
         }

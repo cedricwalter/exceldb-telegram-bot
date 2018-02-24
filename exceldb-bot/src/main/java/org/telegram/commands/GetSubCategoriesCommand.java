@@ -32,17 +32,18 @@ public class GetSubCategoriesCommand extends BotCommand {
                 absSender.sendMessage(answer);
                 return;
             }
+
+            System.out.println(String.format("GetSubCat from %s", user.getUserName()));
+
             ExcelHelper excelHelper = new ExcelHelper();
             Set<String> cat = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 4);
 
-            answer.setText(cat.toString());
+            String[] split = cat.toString().split(",");
+            answer.setText(String.join("\n", split));
             absSender.sendMessage(answer);
-
-
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             BotLogger.error(LOGTAG, e);
         }
     }

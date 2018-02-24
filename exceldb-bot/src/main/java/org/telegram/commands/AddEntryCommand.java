@@ -46,6 +46,7 @@ public class AddEntryCommand extends BotCommand {
                 String subCategory = arguments[2];
                 String url = arguments[3];
 
+                System.out.println(String.format("AddEntry from %s : %s %s %s %s", user.getUserName(), name, category, subCategory, url));
 
                 excelHelper.addEntry(botConfig.getExcel(), name, category, subCategory, url);
                 answer.setText("Success");

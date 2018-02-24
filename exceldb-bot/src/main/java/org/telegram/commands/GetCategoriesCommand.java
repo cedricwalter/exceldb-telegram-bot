@@ -32,10 +32,13 @@ public class GetCategoriesCommand extends BotCommand {
                 absSender.sendMessage(answer);
                 return;
             }
+            System.out.println(String.format("GetCat from %s", user.getUserName()));
+
             ExcelHelper excelHelper = new ExcelHelper();
             Set<String> cat = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 3);
 
-            answer.setText(cat.toString());
+            String[] split = cat.toString().split(",");
+            answer.setText(String.join("\n", split));
             absSender.sendMessage(answer);
 
 
