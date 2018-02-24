@@ -1,6 +1,11 @@
 # exceldb-telegram-bot
 Telegram bot you can ask if something is existing in an excel database, you can also add stuff in excel
 
+# Features
+* Can check in an excel for some value and return all lines matching
+* Can append a new line in an Excel
+* Can return all unique values of any column
+
 ## help
 
 ask the bot for help with /help
@@ -55,3 +60,6 @@ Execute maven package and run like this
 ```
 java -jar exceldb-bot-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
+
+# Resources
+https://core.telegram.org/bots
