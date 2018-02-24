@@ -1,5 +1,8 @@
-# exceldb-telegram-bot
+# Telegram Bot exceldb-telegram-bot
+[![Build Status](https://travis-ci.org/cedricwalter/exceldb-telegram-bot.svg?branch=master)](https://travis-ci.org/cedricwalter/exceldb-telegram-bot)
+
 Telegram bot you can ask if something is existing in an excel database, you can also add stuff in excel
+
 
 # Features
 * Can check in an excel for some value and return all lines matching
@@ -41,7 +44,9 @@ if it goes well you will get in return
 ```
 Done! Congratulations on your new bot. You will find it at t.me/xx-name-of-bot-xx. 
 
-You can now add a description, about section and profile picture for your bot, see /help for a list of commands. By the way, when you've finished creating your cool bot, ping our Bot Support if you want a better username for it. Just make sure the bot is fully operational before you do this.
+You can now add a description, about section and profile picture for your bot, see /help for a list of commands.
+By the way, when you've finished creating your cool bot, ping our Bot Support if you want a better username for it. 
+Just make sure the bot is fully operational before you do this.
 
 Use this token to access the HTTP API:
 xxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
