@@ -21,7 +21,7 @@ public class BotConfig {
     }
 
     public BotConfig() {
-        this("/src/main/resources/config.properties");
+        this("/config.properties");
     }
 
     private String getProperty(String token) {
