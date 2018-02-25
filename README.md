@@ -56,10 +56,12 @@ For a description of the Bot API, see this page: https://core.telegram.org/bots/
 
 Copy the config.properties in classpath and configure
 
+```
 token=xxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 user=xx-name-of-bot-xx
 whitelisted=name of @username allowed to use the bot
 excel=full path to excel file
+```
 
 Execute maven package and run like this 
 ```

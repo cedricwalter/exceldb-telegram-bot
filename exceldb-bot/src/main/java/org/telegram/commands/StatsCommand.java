@@ -11,31 +11,34 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.Map;
 
-public class GetCategoriesCommand extends WhiteListedUserBotCommand {
+public class StatsCommand extends WhiteListedUserBotCommand {
 
-    private static final String LOGTAG = "GETCATEGORIESCOMMAND";
+    private static final String LOGTAG = "STATSCOMMAND";
     private final BotConfig botConfig;
     private final ExcelHelper excelHelper;
 
-    public GetCategoriesCommand() {
-        super("GetCat", "get all startup categories");
+    public StatsCommand() {
+        super("stats", "Return some statistics");
         botConfig = new BotConfig();
         excelHelper = new ExcelHelper();
     }
 
     @Override
     public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) {
-        SendMessage answer = new SendMessage();
-        answer.setChatId(chat.getId().toString());
         try {
-            System.out.println(String.format("GetCat from %s", user.getUserName()));
-            Set<String> cat = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 3);
+            Map<String, String> stats = excelHelper.getStats(botConfig.getExcel());
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String key : stats.keySet()) {
+                stringBuilder.append(key).append("=").append(String.valueOf(stats.get(key))).append("\n");
+            }
 
-            String[] split = cat.toString().split(",");
-            answer.setText(String.join("\n", split));
+            SendMessage answer = new SendMessage();
+            answer.setChatId(chat.getId().toString());
+            answer.setText(stringBuilder.toString());
             absSender.sendMessage(answer);
+
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
         }

@@ -14,7 +14,7 @@ import org.telegram.telegrambots.logging.BotLogger;
 import java.io.IOException;
 import java.util.List;
 
-public class AddEntryCommand extends BotCommand {
+public class AddEntryCommand extends WhiteListedUserBotCommand {
 
     private static final String LOGTAG = "ADDENTRYCOMMAND";
 
@@ -23,17 +23,11 @@ public class AddEntryCommand extends BotCommand {
     }
 
     @Override
-    public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
+    public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) {
         SendMessage answer = new SendMessage();
         answer.setChatId(chat.getId().toString());
         try {
             BotConfig botConfig = new BotConfig();
-            if (!botConfig.isInWhiteList(user)) {
-                answer.setText("You are not authorized to use this bot and need to be whitelisted first, contact @CedricWalter and define an @username!");
-                absSender.sendMessage(answer);
-                return;
-            }
-
             ExcelHelper excelHelper = new ExcelHelper();
 
             if (arguments != null && arguments.length > 0) {

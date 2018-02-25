@@ -8,7 +8,7 @@ import org.telegram.telegrambots.bots.commands.BotCommand;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 
-public class HelloCommand extends BotCommand {
+public class HelloCommand extends WhiteListedUserBotCommand {
 
     private static final String LOGTAG = "HELLOCOMMAND";
 
@@ -17,7 +17,7 @@ public class HelloCommand extends BotCommand {
     }
 
     @Override
-    public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
+    public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) {
         String userName = chat.getUserName();
         if (userName == null || userName.isEmpty()) {
             userName = user.getFirstName() + " " + user.getLastName();

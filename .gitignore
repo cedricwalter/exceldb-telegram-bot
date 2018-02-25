@@ -16,7 +16,7 @@ local.properties
 *.launch
 
 ### IDEA
-.idea/*
+.idea/**/*.*
 *.ipr
 *.iws
 */*.iml

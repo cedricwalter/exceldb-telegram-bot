@@ -11,18 +11,17 @@ import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 
 import java.io.IOException;
-import java.util.Set;
 
-public class GetCategoriesCommand extends WhiteListedUserBotCommand {
+public class CountCommand extends WhiteListedUserBotCommand {
 
-    private static final String LOGTAG = "GETCATEGORIESCOMMAND";
+    private static final String LOGTAG = "COUNTCOMMAND";
     private final BotConfig botConfig;
     private final ExcelHelper excelHelper;
 
-    public GetCategoriesCommand() {
-        super("GetCat", "get all startup categories");
-        botConfig = new BotConfig();
+    public CountCommand() {
+        super("count", "Return the number of entries in excel");
         excelHelper = new ExcelHelper();
+        botConfig = new BotConfig();
     }
 
     @Override
@@ -30,16 +29,13 @@ public class GetCategoriesCommand extends WhiteListedUserBotCommand {
         SendMessage answer = new SendMessage();
         answer.setChatId(chat.getId().toString());
         try {
-            System.out.println(String.format("GetCat from %s", user.getUserName()));
-            Set<String> cat = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 3);
+            int count = excelHelper.count(botConfig.getExcel());
 
-            String[] split = cat.toString().split(",");
-            answer.setText(String.join("\n", split));
+            answer.setText("We have currently " + count + " entrie(s) in excel.");
             absSender.sendMessage(answer);
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             BotLogger.error(LOGTAG, e);
         }
     }
