@@ -3,6 +3,7 @@ package org.telegram.commands;
 import com.cedricwalter.telegram.exceldbbot.ExcelHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.telegram.BotConfig;
+import org.telegram.services.Emoji;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
@@ -21,7 +22,7 @@ public class HasEntryCommand extends WhiteListedUserBotCommand {
     private final ExcelHelper excelHelper;
 
     public HasEntryCommand() {
-        super("hasEntry", "Check if database contains company name or company url already, if found returns them each as a unique message. e.g /hasentry inacta");
+        super("hasEntry", "Check if database contains company name or company url already, if found returns them each as a unique message (up to 10). e.g /hasentry acme");
         botConfig = new BotConfig();
         excelHelper = new ExcelHelper();
     }
@@ -41,32 +42,21 @@ public class HasEntryCommand extends WhiteListedUserBotCommand {
                     List<String> rowList = ExcelHelper.toString(rows);
                     if (rowList.size() > 10) {
 
-                        SendMessage answer = new SendMessage();
-                        answer.setChatId(chat.getId().toString());
-                        answer.setText("Found too much entries " + rowList.size() + " returning only 10 first entries.");
-                        absSender.sendMessage(answer);
+                        String text = "Found too much entries " + rowList.size() + " returning only 10 first entries.";
+                        sendMessage(absSender, chat, text);
 
                         rowList = rowList.subList(0, 10);
                     }
 
                     for (String result : rowList) {
-                        SendMessage answer = new SendMessage();
-                        answer.setChatId(chat.getId().toString());
-                        answer.setText(result);
-                        absSender.sendMessage(answer);
+                        sendMessage(absSender, chat, result);
                     }
                 } else {
-                    SendMessage answer = new SendMessage();
-                    answer.setChatId(chat.getId().toString());
-                    answer.setText("Found no entries " + entry + "you may want to add this entry using \n /addEntry [name] [categorie] [subcategorie] [url] \n if you don't have a category yet use empty string like this\n /addEntry [name] \"\" \"\" [url]");
-                    absSender.sendMessage(answer);
+                    sendMessage(absSender, chat, "Found no entries " + entry + " you may want to add this entry using \n/addentry acme-inc category-with-space subcategory-with-space www.acme.com\n"+ Emoji.NO_ENTRY_SIGN+" don't use space, replace them with -");
                 }
             }
             else {
-                SendMessage answer = new SendMessage();
-                answer.setChatId(chat.getId().toString());
-                answer.setText("Provide at least a search pattern, e.g /hasentry google");
-                absSender.sendMessage(answer);
+                sendMessage(absSender, chat, "Provide at least a search pattern, e.g /hasentry google");
             }
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
@@ -74,4 +64,5 @@ public class HasEntryCommand extends WhiteListedUserBotCommand {
             BotLogger.error(LOGTAG, e);
         }
     }
+
 }

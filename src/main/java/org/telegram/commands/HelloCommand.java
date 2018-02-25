@@ -30,12 +30,9 @@ public class HelloCommand extends WhiteListedUserBotCommand {
             messageTextBuilder.append(String.join(" ", arguments));
         }
 
-        SendMessage answer = new SendMessage();
-        answer.setChatId(chat.getId().toString());
-        answer.setText(messageTextBuilder.toString());
-
         try {
-            absSender.sendMessage(answer);
+            sendMessage(absSender, chat, messageTextBuilder.toString());
+
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
         }

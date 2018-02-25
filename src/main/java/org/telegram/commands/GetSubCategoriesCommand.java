@@ -27,15 +27,16 @@ public class GetSubCategoriesCommand extends WhiteListedUserBotCommand {
 
     @Override
     public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) {
-        SendMessage answer = new SendMessage();
-        answer.setChatId(chat.getId().toString());
         try {
             System.out.println(String.format("GetSubCat from %s", user.getUserName()));
-            Set<String> cat = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 4);
+            Set<String> subCategories = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 4);
 
-            String[] split = cat.toString().split(",");
-            answer.setText(String.join("\n", split));
-            absSender.sendMessage(answer);
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String subCategory : subCategories) {
+                stringBuilder.append(subCategory.trim().replaceAll(" ", "-")).append("\n");
+            }
+
+            sendMessage(absSender, chat, stringBuilder.toString());
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
         } catch (IOException e) {

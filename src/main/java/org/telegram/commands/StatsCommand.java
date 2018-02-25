@@ -34,10 +34,7 @@ public class StatsCommand extends WhiteListedUserBotCommand {
                 stringBuilder.append(key).append("=").append(String.valueOf(stats.get(key))).append("\n");
             }
 
-            SendMessage answer = new SendMessage();
-            answer.setChatId(chat.getId().toString());
-            answer.setText(stringBuilder.toString());
-            absSender.sendMessage(answer);
+            sendMessage(absSender, chat, stringBuilder.toString());
 
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);

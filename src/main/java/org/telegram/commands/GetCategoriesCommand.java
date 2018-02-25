@@ -27,15 +27,16 @@ public class GetCategoriesCommand extends WhiteListedUserBotCommand {
 
     @Override
     public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) {
-        SendMessage answer = new SendMessage();
-        answer.setChatId(chat.getId().toString());
         try {
             System.out.println(String.format("GetCat from %s", user.getUserName()));
-            Set<String> cat = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 3);
+            Set<String> categories = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 3);
 
-            String[] split = cat.toString().split(",");
-            answer.setText(String.join("\n", split));
-            absSender.sendMessage(answer);
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String category : categories) {
+                stringBuilder.append(category.trim().replaceAll(" ", "-")).append("\n");
+            }
+
+            sendMessage(absSender, chat, stringBuilder.toString());
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
         }

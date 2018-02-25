@@ -26,13 +26,10 @@ public class CountCommand extends WhiteListedUserBotCommand {
 
     @Override
     public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) {
-        SendMessage answer = new SendMessage();
-        answer.setChatId(chat.getId().toString());
         try {
             int count = excelHelper.count(botConfig.getExcel());
 
-            answer.setText("We have currently " + count + " entrie(s) in excel.");
-            absSender.sendMessage(answer);
+            sendMessage(absSender, chat, "We have currently " + count + " entrie(s) in excel.");
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
         } catch (IOException e) {

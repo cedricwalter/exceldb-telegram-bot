@@ -3,6 +3,7 @@ package org.telegram.commands;
 import com.cedricwalter.telegram.exceldbbot.ExcelHelper;
 import org.apache.poi.ss.usermodel.Row;
 import org.telegram.BotConfig;
+import org.telegram.services.Emoji;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
@@ -17,23 +18,21 @@ import java.util.List;
 public class AddEntryCommand extends WhiteListedUserBotCommand {
 
     private static final String LOGTAG = "ADDENTRYCOMMAND";
+    private final BotConfig botConfig;
+    private final ExcelHelper excelHelper;
 
     public AddEntryCommand() {
-        super("addEntry", "Add entry new startup to database");
+        super("addEntry", "Add entry new startup to database\n\n/addentry acme-inc category-with-space subcategory-with-space www.acme.com\n"+ Emoji.NO_ENTRY_SIGN+" don't use space, replace them with -");
+        botConfig = new BotConfig();
+        excelHelper = new ExcelHelper();
     }
 
     @Override
     public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) {
-        SendMessage answer = new SendMessage();
-        answer.setChatId(chat.getId().toString());
         try {
-            BotConfig botConfig = new BotConfig();
-            ExcelHelper excelHelper = new ExcelHelper();
-
             if (arguments != null && arguments.length > 0) {
                 if (arguments.length != 4) {
-                    answer.setChatId(chat.getId().toString());
-                    answer.setText("You need to provide name category subcategory url like \n 'cedric gmbh' 'blockchain finance' 'education and training' 'www.cedricwalter.com'");
+                    sendMessage(absSender, chat, "You need to provide name category subcategory url like \n/addentry acme-inc category-with-space subcategory-with-space www.acme.com\n"+ Emoji.NO_ENTRY_SIGN+" don't use space, replace them with -");
                 }
                 String name = arguments[0];
                 String category = arguments[1];
@@ -43,14 +42,10 @@ public class AddEntryCommand extends WhiteListedUserBotCommand {
                 System.out.println(String.format("AddEntry from %s : %s %s %s %s", user.getUserName(), name, category, subCategory, url));
 
                 excelHelper.addEntry(botConfig.getExcel(), name, category, subCategory, url);
-                answer.setText("Success");
-                absSender.sendMessage(answer);
+                sendMessage(absSender, chat, "Success");
             } else {
-                answer.setChatId(chat.getId().toString());
-                answer.setText("You need to provide name category subcategory url like \n 'cedric gmbh' 'blockchain finance' 'education and training' 'www.cedricwalter.com'");
+                sendMessage(absSender, chat, "You need to provide name category subcategory url like \n/addentry acme-inc Blockchain-Service-Provider entertainment www.acme.com");
             }
-
-            absSender.sendMessage(answer);
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
         } catch (IOException e) {
