@@ -38,6 +38,7 @@ public abstract class WhiteListedUserBotCommand extends BotCommand {
     protected void sendMessage(AbsSender absSender, Chat chat, String text) throws TelegramApiException {
         SendMessage answer = new SendMessage();
         answer.setChatId(chat.getId().toString());
+        answer.enableHtml(true);
         answer.setText(text);
         absSender.sendMessage(answer);
     }

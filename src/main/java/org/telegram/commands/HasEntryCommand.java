@@ -22,7 +22,7 @@ public class HasEntryCommand extends WhiteListedUserBotCommand {
     private final ExcelHelper excelHelper;
 
     public HasEntryCommand() {
-        super("hasEntry", "Check if database contains company name or company url already, if found returns them each as a unique message (up to 10). e.g /hasentry acme");
+        super("has", "Check if database contains company name or company url already, if found returns them each as a unique message (up to 10). e.g /has acme");
         botConfig = new BotConfig();
         excelHelper = new ExcelHelper();
     }
@@ -52,11 +52,11 @@ public class HasEntryCommand extends WhiteListedUserBotCommand {
                         sendMessage(absSender, chat, result);
                     }
                 } else {
-                    sendMessage(absSender, chat, "Found no entries " + entry + " you may want to add this entry using \n/addentry acme-inc category-with-space subcategory-with-space www.acme.com\n"+ Emoji.NO_ENTRY_SIGN+" don't use space, replace them with -");
+                    sendMessage(absSender, chat, "Found no entries " + entry + " you may want to add this entry using \n/add acme-inc category-with-space subcategory-with-space www.acme.com\n"+ Emoji.NO_ENTRY_SIGN+" don't use space, replace them with -");
                 }
             }
             else {
-                sendMessage(absSender, chat, "Provide at least a search pattern, e.g /hasentry google");
+                sendMessage(absSender, chat, "Provide at least a search pattern, e.g /has google");
             }
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);

@@ -1,0 +1,63 @@
+Technology
+* cryptocurrency
+* hardware-&-infrastructure
+* climate
+* supply-chain
+* platform
+* community
+* network
+* entertainment
+* communication-&-collaboration
+* finance
+* security-&-encryption
+* mining
+* IoT
+
+Financial-Industry
+* Blockchain-Investor
+* Broker
+* Investor
+* Banks
+* asset-management
+* trade-&-exchange
+* payment
+* Crypto-Bank
+* Crypto-Coin
+* Credit
+
+Other-Industries
+* real-estate
+* health
+* insurance
+* energy
+* entertainment
+* investment-&-funding
+
+Service-Provider
+* consulting-&-implementation
+* investment-&-funding
+* finance
+* hardware-&-infrastructure
+* payment
+* accelerator-&-incubator
+* marketing-&-communication
+* e-government
+* legal
+* ico
+* HR
+* security-&-encryption
+
+Events-Association-Media
+* association
+* event
+* media
+* community
+
+Academia-Education
+* academia
+* education
+* Innovation
+
+Regulator
+* regulator
+
