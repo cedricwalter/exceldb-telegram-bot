@@ -15,7 +15,7 @@ class BotConfigTest {
 
     @BeforeEach
     private void init() {
-        botConfig = new BotConfig("/testconfig.properties");
+        botConfig = new BotConfig("/src/test/resources/testconfig.properties");
     }
 
     @Test

@@ -24,7 +24,7 @@ class ExcelHelperTest {
     @BeforeEach
     public void init() {
         excelHelper = new ExcelHelper();
-        resource = ExcelHelperTest.class.getResource("/index.xlsx");
+        resource = ExcelHelperTest.class.getResource("/src/test/resources/index.xlsx");
     }
 
     @Test
@@ -61,7 +61,7 @@ class ExcelHelperTest {
     public void withIndexExcel_getStats_expectStatsCorrect() throws IOException {
         // Arrange
         // Act
-        Map<String, String> stats = excelHelper.getStats(ExcelHelperTest.class.getResource("/getStats-missingCategory.xlsx").getFile());
+        Map<String, String> stats = excelHelper.getStats(ExcelHelperTest.class.getResource("/src/test/resources/getStats-missingCategory.xlsx").getFile());
 
         // Assert
         String startup_missing_category = String.valueOf(stats.get("startup missing category"));

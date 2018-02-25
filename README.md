@@ -65,7 +65,7 @@ excel=full path to excel file
 
 Execute maven package and run like this 
 ```
-java -jar exceldb-bot-1.0-SNAPSHOT-jar-with-dependencies.jar
+java -jar exceldb-telegram-bot-1.0-SNAPSHOT-jar-with-dependencies.jar
 ```
 
 # Resources

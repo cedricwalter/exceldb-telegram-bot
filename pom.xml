@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cedricwalter.telegram</groupId>
-    <artifactId>exceldb-bot</artifactId>
+    <artifactId>exceldb-telegram-bot</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <description>Telegram bot you can ask if something is existing in an excel database, you can also add stuff</description>
