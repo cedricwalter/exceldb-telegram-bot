@@ -1,13 +1,16 @@
 # Telegram Bot exceldb-telegram-bot
 [![Build Status](https://travis-ci.org/cedricwalter/exceldb-telegram-bot.svg?branch=master)](https://travis-ci.org/cedricwalter/exceldb-telegram-bot)
 
-Telegram bot you can ask if something is existing in an excel database, you can also add stuff in excel
-
+Telegram bot you can ask if something is existing in an excel database, you can also add stuff in excel.
 
 # Features
 * Can check in an excel for some value and return all lines matching
 * Can append a new line in an Excel
 * Can return all unique values of any column
+
+## limitations
+Code is not fully generic yet, but i am working towards it
+
 
 ## help
 
