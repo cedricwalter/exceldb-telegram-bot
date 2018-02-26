@@ -33,7 +33,7 @@ public class HasEntryCommand extends WhiteListedUserBotCommand {
             if (arguments != null && arguments.length > 0) {
                 String entry = arguments[0];
 
-                System.out.println(String.format("hasEntry %s from %s", entry, user.getUserName()));
+                System.out.println(String.format("/has %s from %s", entry, user.getUserName()));
 
                 List<Row> rows = excelHelper.hasEntry(botConfig.getExcel(), entry);
 
@@ -52,7 +52,10 @@ public class HasEntryCommand extends WhiteListedUserBotCommand {
                         sendMessage(absSender, chat, result);
                     }
                 } else {
-                    sendMessage(absSender, chat, "Found no entries " + entry + " you may want to add this entry using \n/add acme-inc category-with-space subcategory-with-space www.acme.com\n"+ Emoji.NO_ENTRY_SIGN+" don't use space, replace them with -");
+                    String newEntry = entry.replaceAll(" ", "-");
+                    sendMessage(absSender, chat, "Found no entries " + entry + " you may want to add this entry using \n" +
+                            "/add "+newEntry+"         or\n" +
+                            "/add "+newEntry+" category-with-space subcategory-with-space www.acme.com\n"+ Emoji.NO_ENTRY_SIGN+" don't use space, replace them with -");
                 }
             }
             else {

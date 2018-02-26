@@ -2,8 +2,10 @@ package com.cedricwalter.telegram.exceldbbot;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.telegram.BotConfig;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class ExcelHelper {
@@ -131,7 +133,9 @@ public class ExcelHelper {
     }
 
     public Map<String, String> getStats(String excelFileName) throws IOException {
-        Map statistics = new HashMap();
+        Map statistics = new TreeMap();
+
+        BotConfig config = new BotConfig();
 
         long missingCategory = 0;
         long missingSubcategory = 0;
@@ -139,6 +143,7 @@ public class ExcelHelper {
         long missingDescription = 0;
         long missingAdresses = 0;
         long missinglatLong = 0;
+        long missingLogo = 0;
 
         XSSFWorkbook workbook = getWorkbook(excelFileName);
         Sheet dataTypeSheet = workbook.getSheetAt(0);
@@ -147,6 +152,16 @@ public class ExcelHelper {
         while (iterator.hasNext()) {
             Row currentRow = iterator.next();
 
+            Cell cell = currentRow.getCell(NAME_COLUMN_INDEX);
+            if (cell != null) {
+                if (cell.getCellTypeEnum().equals(CellType.STRING)) {
+                    String stringCellValue = cell.getStringCellValue().trim();
+                    boolean exists = new File(config.getExcelImages() + stringCellValue + ".png").exists();
+                    if (!exists) {
+                        missingLogo++;
+                    }
+                }
+            }
             missingCategory += incrementCounterIfCellEmpty(currentRow, CATEGORY_COLUMN_INDEX);
             missingSubcategory += incrementCounterIfCellEmpty(currentRow, SUBCATEGORY_COLUMN_INDEX);
             missingMotto += incrementCounterIfCellEmpty(currentRow, MOTTO_COLUMN_INDEX);
@@ -157,12 +172,16 @@ public class ExcelHelper {
         }
 
         statistics.put("number of startup", dataTypeSheet.getPhysicalNumberOfRows());
-        statistics.put("startup missing category", missingCategory);
-        statistics.put("startup missing subcategory", missingSubcategory);
-        statistics.put("startup missing motto", missingMotto);
-        statistics.put("startup missing description", missingDescription);
-        statistics.put("startup missing addresses", missingAdresses);
-        statistics.put("startup missing lat,long", missinglatLong);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        statistics.put("Last modified", sdf.format(new File(excelFileName).lastModified()));
+        statistics.put("- missing logo", missingLogo);
+        statistics.put("- missing category", missingCategory);
+        statistics.put("- missing subcategory", missingSubcategory);
+        statistics.put("- missing motto", missingMotto);
+        statistics.put("- missing description", missingDescription);
+        statistics.put("- missing addresses", missingAdresses);
+        statistics.put("- missing lat,long", missinglatLong);
 
         return statistics;
     }

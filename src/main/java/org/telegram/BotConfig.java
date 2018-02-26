@@ -53,4 +53,8 @@ public class BotConfig {
     public List<String> getWhiteList() {
         return Arrays.asList(getProperty("whitelisted").split(","));
     }
+
+    public String getExcelImages() {
+        return getProperty("excelImages");
+    }
 }
