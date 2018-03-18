@@ -26,7 +26,7 @@ public class HelloCommand extends WhiteListedUserBotCommand {
         StringBuilder messageTextBuilder = new StringBuilder("Hello ").append(userName);
         if (arguments != null && arguments.length > 0) {
             messageTextBuilder.append("\n");
-            messageTextBuilder.append("Thank you so much for your kind words:\n");
+            messageTextBuilder.append("Thank you so much for your kind " + arguments.length + "words:\n");
             messageTextBuilder.append(String.join(" ", arguments));
         }
 

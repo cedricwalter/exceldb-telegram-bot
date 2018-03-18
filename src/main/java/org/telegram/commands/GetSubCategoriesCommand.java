@@ -29,7 +29,7 @@ public class GetSubCategoriesCommand extends WhiteListedUserBotCommand {
     public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) {
         try {
             System.out.println(String.format("GetSubCat from %s", user.getUserName()));
-            Set<String> subCategories = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 4);
+            Set<String> subCategories = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 2);
 
             StringBuilder stringBuilder = new StringBuilder();
             for (String subCategory : subCategories) {
