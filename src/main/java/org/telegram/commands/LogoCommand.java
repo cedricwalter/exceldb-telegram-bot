@@ -34,7 +34,7 @@ public class LogoCommand extends WhiteListedUserBotCommand {
             Set<String> names = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 0);
             for (String name : names) {
                 if (!fileExistsCaseSensitive(botConfig.getLogoPath() + name.trim() + ".png")) {
-                    messageTextBuilder.append(name+".png").append("\n");
+                    messageTextBuilder.append(name.trim()+".png").append("\n");
                 }
             }
             String message = messageTextBuilder.toString();

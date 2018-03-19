@@ -238,7 +238,10 @@ public class ExcelHelper {
         long l = incrementCounterIfCellEmpty(currentRow, column);
         if (l == 1) {
             counter += l;
-            stringBuilder.append("   - ").append(currentRow.getCell(0).getStringCellValue()).append("\n");
+            Cell cell = currentRow.getCell(0);
+            if (cell != null) {
+                stringBuilder.append("   - ").append(cell.getStringCellValue()).append("\n");
+            }
         }
         return counter;
     }
