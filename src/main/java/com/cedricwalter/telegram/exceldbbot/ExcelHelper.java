@@ -24,6 +24,7 @@ public class ExcelHelper {
     public static final int ADDRESS1_COLUMN_INDEX = 7;
     public static final int ADDRESS2_COLUMN_INDEX = 8;
     public static final int ADDRESS3_COLUMN_INDEX = 9;
+    public static final int TOP30_COLUMN_INDEX = 23;
 
     public Set<String> getStruct(String excelFileName) throws IOException {
         XSSFWorkbook workbook = getWorkbook(excelFileName);
@@ -60,6 +61,35 @@ public class ExcelHelper {
         }
         return potential;
     }
+
+    public Set<String> getNameForColumnMatching(String excelFileName, int columnIndex, boolean value) throws IOException {
+        XSSFWorkbook workbook = getWorkbook(excelFileName);
+
+        Sheet dataTypeSheet = workbook.getSheetAt(0);
+        Iterator<Row> iterator = dataTypeSheet.iterator();
+
+        Set<String> potential = new HashSet<>();
+        while (iterator.hasNext()) {
+            Row currentRow = iterator.next();
+            Cell cell = currentRow.getCell(columnIndex);
+            if (cell != null) {
+
+
+                int cellType = cell.getCellType();
+                if (cellType == CellType.BOOLEAN.getCode()) {
+                    if (cell.getBooleanCellValue() == value) {
+                        Cell nameCell = currentRow.getCell(0);
+                        if (nameCell != null) {
+                            potential.add(nameCell.getStringCellValue());
+                        }
+                    }
+                }
+            }
+        }
+        return potential;
+    }
+
+
 
     public List<Row> hasEntry(String fileName, String entry) throws IOException {
         XSSFWorkbook workbook = getWorkbook(fileName);
