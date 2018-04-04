@@ -60,4 +60,8 @@ public class BotConfig {
     public String getExcelImages() {
         return getProperty("excelImages");
     }
+
+    public String getSVGPath() {
+        return getProperty("svgImages");
+    }
 }

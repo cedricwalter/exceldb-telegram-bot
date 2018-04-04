@@ -1,27 +1,24 @@
 package org.telegram.commands;
 
 import com.cedricwalter.telegram.exceldbbot.ExcelHelper;
-import org.apache.poi.ss.usermodel.Row;
 import org.telegram.BotConfig;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
-import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
-public class LogoCommand extends WhiteListedUserBotCommand {
+public class SVGCommand extends WhiteListedUserBotCommand {
 
-    private static final String LOGTAG = "LOGOCOMMAND";
+    private static final String LOGTAG = "SVGCOMMAND";
     private final BotConfig botConfig;
     private final ExcelHelper excelHelper;
 
-    public LogoCommand() {
-        super("logo", "return logo missing");
+    public SVGCommand() {
+        super("svg", "return missing for poster");
         botConfig = new BotConfig();
         excelHelper = new ExcelHelper();
     }
@@ -33,8 +30,9 @@ public class LogoCommand extends WhiteListedUserBotCommand {
 
             Set<String> names = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 0);
             for (String name : names) {
-                if (!fileExistsCaseSensitive(botConfig.getLogoPath() + name.trim() + ".png")) {
-                    messageTextBuilder.append(name.trim()+".png").append("\n");
+                if (!fileExistsCaseSensitive(botConfig.getSVGPath() + name.trim() + ".svg")) {
+                    System.out.println(name.trim());
+                    messageTextBuilder.append(name.trim()).append("\n");
                 }
             }
             String message = messageTextBuilder.toString();
