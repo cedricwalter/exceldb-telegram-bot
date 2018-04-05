@@ -1,5 +1,6 @@
 package com.cedricwalter.telegram.exceldbbot;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.telegram.BotConfig;
@@ -11,20 +12,6 @@ import java.util.regex.Pattern;
 
 public class ExcelHelper {
 
-    public static final int LAT_COLUMN_INDEX = 15;
-    public static final int LONG_COLUMN_INDEX = 16;
-
-
-    public static final int NAME_COLUMN_INDEX = 0;
-    public static final int CATEGORY_COLUMN_INDEX = 1;
-    public static final int SUBCATEGORY_COLUMN_INDEX = 2;
-    public static final int URL_COLUMN_INDEX = 3;
-    public static final int MOTTO_COLUMN_INDEX = 4;
-    public static final int DESCRIPTION_COLUMN_INDEX = 5;
-    public static final int ADDRESS1_COLUMN_INDEX = 7;
-    public static final int ADDRESS2_COLUMN_INDEX = 8;
-    public static final int ADDRESS3_COLUMN_INDEX = 9;
-    public static final int TOP30_COLUMN_INDEX = 23;
 
     public Set<String> getStruct(String excelFileName) throws IOException {
         XSSFWorkbook workbook = getWorkbook(excelFileName);
@@ -35,8 +22,8 @@ public class ExcelHelper {
         Set<String> potential = new HashSet<>();
         while (iterator.hasNext()) {
             Row currentRow = iterator.next();
-            Cell cellCat = currentRow.getCell(CATEGORY_COLUMN_INDEX);
-            Cell cellSubCat = currentRow.getCell(SUBCATEGORY_COLUMN_INDEX);
+            Cell cellCat = currentRow.getCell(ExcelIndexes.CATEGORY_COLUMN_INDEX);
+            Cell cellSubCat = currentRow.getCell(ExcelIndexes.SUBCATEGORY_COLUMN_INDEX);
             if (cellCat != null) {
                 potential.add(cellCat.getStringCellValue().replaceAll(" ", "-") + "|" + cellSubCat.getStringCellValue().replaceAll(" ", "-"));
             }
@@ -71,24 +58,33 @@ public class ExcelHelper {
         Set<String> potential = new HashSet<>();
         while (iterator.hasNext()) {
             Row currentRow = iterator.next();
-            Cell cell = currentRow.getCell(columnIndex);
-            if (cell != null) {
 
-
-                int cellType = cell.getCellType();
-                if (cellType == CellType.BOOLEAN.getCode()) {
-                    if (cell.getBooleanCellValue() == value) {
-                        Cell nameCell = currentRow.getCell(0);
-                        if (nameCell != null) {
-                            potential.add(nameCell.getStringCellValue());
-                        }
-                    }
-                }
+            String isTop30 = getValueSafe(currentRow, columnIndex);
+            if (value == Boolean.valueOf(isTop30)) {
+                potential.add(getValueSafe(currentRow, ExcelIndexes.NAME_COLUMN_INDEX) + " (" +
+                        getValueSafe(currentRow, ExcelIndexes.CATEGORY_COLUMN_INDEX) + "/" +
+                        getValueSafe(currentRow, ExcelIndexes.SUBCATEGORY_COLUMN_INDEX) + ")"
+                );
             }
+
         }
         return potential;
     }
 
+    private String getValueSafe(Row currentRow, int columnIndex) {
+        String value = "";
+        Cell cell = currentRow.getCell(columnIndex);
+        if (cell != null) {
+
+            int cellType = cell.getCellType();
+            if (cellType == CellType.BOOLEAN.getCode()) {
+                value = String.valueOf(cell.getBooleanCellValue());
+            } else if (cellType == CellType.STRING.getCode()) {
+                value = cell.getStringCellValue();
+            }
+        }
+        return value;
+    }
 
 
     public List<Row> hasEntry(String fileName, String entry) throws IOException {
@@ -101,8 +97,8 @@ public class ExcelHelper {
         while (iterator.hasNext()) {
             Row currentRow = iterator.next();
 
-            Cell nameCell = currentRow.getCell(NAME_COLUMN_INDEX);
-            Cell urlCell = currentRow.getCell(URL_COLUMN_INDEX);
+            Cell nameCell = currentRow.getCell(ExcelIndexes.NAME_COLUMN_INDEX);
+            Cell urlCell = currentRow.getCell(ExcelIndexes.URL_COLUMN_INDEX);
 
             if (nameCell != null && urlCell != null) {
 
@@ -134,10 +130,10 @@ public class ExcelHelper {
         int rowNum = dataTypeSheet.getPhysicalNumberOfRows();
         Row row = dataTypeSheet.createRow(rowNum++);
 
-        row.createCell(NAME_COLUMN_INDEX).setCellValue(name);
-        row.createCell(CATEGORY_COLUMN_INDEX).setCellValue(category);
-        row.createCell(SUBCATEGORY_COLUMN_INDEX).setCellValue(subCategory);
-        row.createCell(URL_COLUMN_INDEX).setCellValue(url);
+        row.createCell(ExcelIndexes.NAME_COLUMN_INDEX).setCellValue(name);
+        row.createCell(ExcelIndexes.CATEGORY_COLUMN_INDEX).setCellValue(category);
+        row.createCell(ExcelIndexes.SUBCATEGORY_COLUMN_INDEX).setCellValue(subCategory);
+        row.createCell(ExcelIndexes.URL_COLUMN_INDEX).setCellValue(url);
 
         try {
             FileOutputStream outputStream = new FileOutputStream(fileName);
@@ -166,12 +162,12 @@ public class ExcelHelper {
         //str.append("Too much results (" + rows.size() + "), displaying in condensed form\n\n");
         for (Row row : excelRows) {
             StringBuilder str = new StringBuilder();
-            appendIfNotNull(str, row.getCell(NAME_COLUMN_INDEX));
-            appendIfNotNull(str, row.getCell(CATEGORY_COLUMN_INDEX));
-            appendIfNotNull(str, row.getCell(SUBCATEGORY_COLUMN_INDEX));
-            appendIfNotNull(str, row.getCell(URL_COLUMN_INDEX));
-            appendIfNotNull(str, row.getCell(MOTTO_COLUMN_INDEX));
-            appendIfNotNull(str, row.getCell(DESCRIPTION_COLUMN_INDEX));
+            appendIfNotNull(str, row.getCell(ExcelIndexes.NAME_COLUMN_INDEX));
+            appendIfNotNull(str, row.getCell(ExcelIndexes.CATEGORY_COLUMN_INDEX));
+            appendIfNotNull(str, row.getCell(ExcelIndexes.SUBCATEGORY_COLUMN_INDEX));
+            appendIfNotNull(str, row.getCell(ExcelIndexes.URL_COLUMN_INDEX));
+            appendIfNotNull(str, row.getCell(ExcelIndexes.MOTTO_COLUMN_INDEX));
+            appendIfNotNull(str, row.getCell(ExcelIndexes.DESCRIPTION_COLUMN_INDEX));
             rowList.add(str.toString());
         }
 
@@ -215,7 +211,7 @@ public class ExcelHelper {
         for (String name : names) {
             String trim = name.trim();
             if (!fileExistsCaseSensitive(config.getLogoPath() + trim + ".png")) {
-                missingLogoNames.append(trim+".png").append("\n");
+                missingLogoNames.append(trim + ".png").append("\n");
                 missingLogo++;
             }
         }
@@ -230,14 +226,14 @@ public class ExcelHelper {
         while (iterator.hasNext()) {
             Row currentRow = iterator.next();
 
-            missingCategoryCounter = report(missingCategoryCounter, missingCategory, currentRow, CATEGORY_COLUMN_INDEX);
-            missingSubcategoryCounter = report(missingSubcategoryCounter, missingSubCategory, currentRow, SUBCATEGORY_COLUMN_INDEX);
-            missingMottoCounter = report(missingMottoCounter, missingMotto, currentRow, MOTTO_COLUMN_INDEX);
-            missingDescriptionCounter = report(missingDescriptionCounter, missingDescription, currentRow, DESCRIPTION_COLUMN_INDEX);
+            missingCategoryCounter = report(missingCategoryCounter, missingCategory, currentRow, ExcelIndexes.CATEGORY_COLUMN_INDEX);
+            missingSubcategoryCounter = report(missingSubcategoryCounter, missingSubCategory, currentRow, ExcelIndexes.SUBCATEGORY_COLUMN_INDEX);
+            missingMottoCounter = report(missingMottoCounter, missingMotto, currentRow, ExcelIndexes.MOTTO_COLUMN_INDEX);
+            missingDescriptionCounter = report(missingDescriptionCounter, missingDescription, currentRow, ExcelIndexes.DESCRIPTION_COLUMN_INDEX);
 
-            missingAddressesCounter = report(missingAddressesCounter, missingAddresses, currentRow, ADDRESS3_COLUMN_INDEX);
-            missingLatCounter = report(missingLatCounter, missingLat, currentRow, LAT_COLUMN_INDEX);
-            missingLongCounter = report(missingLongCounter, missingLong, currentRow, LONG_COLUMN_INDEX);
+            missingAddressesCounter = report(missingAddressesCounter, missingAddresses, currentRow, ExcelIndexes.ADDRESS3_COLUMN_INDEX);
+            missingLatCounter = report(missingLatCounter, missingLat, currentRow, ExcelIndexes.LAT_COLUMN_INDEX);
+            missingLongCounter = report(missingLongCounter, missingLong, currentRow, ExcelIndexes.LONG_COLUMN_INDEX);
         }
 
         statistics.put("number of startup", dataTypeSheet.getPhysicalNumberOfRows());
@@ -284,7 +280,6 @@ public class ExcelHelper {
             return false;
         }
     }
-
 
 
     private long incrementCounterIfCellEmpty(Row currentRow, int column) {

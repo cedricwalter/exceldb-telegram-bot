@@ -1,6 +1,7 @@
 package org.telegram.commands;
 
 import com.cedricwalter.telegram.exceldbbot.ExcelHelper;
+import com.cedricwalter.telegram.exceldbbot.ExcelIndexes;
 import org.telegram.BotConfig;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
@@ -28,9 +29,10 @@ public class Top30Command extends WhiteListedUserBotCommand {
         try {
             StringBuilder messageTextBuilder = new StringBuilder();
 
-            Set<String> names = excelHelper.getNameForColumnMatching(botConfig.getExcel(), 23, true);
+            Set<String> names = excelHelper.getNameForColumnMatching(botConfig.getExcel(), ExcelIndexes.TOP30_COLUMN_INDEX, true);
+            int i = 1;
             for (String name : names) {
-                messageTextBuilder.append("   - " + name.trim()).append("\n");
+                messageTextBuilder.append(" " + i++ + " " + name.trim()).append("\n");
             }
             String message = messageTextBuilder.toString();
             if (message.length() > 0) {
