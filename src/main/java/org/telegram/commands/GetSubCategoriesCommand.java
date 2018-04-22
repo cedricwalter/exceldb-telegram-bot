@@ -2,11 +2,9 @@ package org.telegram.commands;
 
 import com.cedricwalter.telegram.exceldbbot.ExcelHelper;
 import org.telegram.BotConfig;
-import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
-import org.telegram.telegrambots.bots.commands.BotCommand;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 
@@ -29,7 +27,7 @@ public class GetSubCategoriesCommand extends WhiteListedUserBotCommand {
     public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) {
         try {
             System.out.println(String.format("GetSubCat from %s", user.getUserName()));
-            Set<String> subCategories = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 2);
+            Set<String> subCategories = excelHelper.getUniqueColumnValues( 2);
 
             StringBuilder stringBuilder = new StringBuilder();
             for (String subCategory : subCategories) {
@@ -39,7 +37,7 @@ public class GetSubCategoriesCommand extends WhiteListedUserBotCommand {
             sendMessage(absSender, chat, stringBuilder.toString());
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             BotLogger.error(LOGTAG, e);
         }
     }

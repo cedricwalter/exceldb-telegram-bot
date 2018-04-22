@@ -2,11 +2,9 @@ package org.telegram.commands;
 
 import com.cedricwalter.telegram.exceldbbot.ExcelHelper;
 import org.telegram.BotConfig;
-import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
-import org.telegram.telegrambots.bots.commands.BotCommand;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 
@@ -27,12 +25,12 @@ public class CountCommand extends WhiteListedUserBotCommand {
     @Override
     public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) {
         try {
-            int count = excelHelper.count(botConfig.getExcel());
+            int count = excelHelper.count();
 
             sendMessage(absSender, chat, "We have currently " + count + " entrie(s) in excel.");
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             BotLogger.error(LOGTAG, e);
         }
     }

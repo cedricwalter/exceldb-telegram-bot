@@ -31,10 +31,11 @@ public class StructCommand extends WhiteListedUserBotCommand {
         try {
             StringBuilder messageTextBuilder = new StringBuilder();
 
-            Set<String> names = excelHelper.getStruct(botConfig.getExcel());
+            Set<String> names = excelHelper.getStruct();
             List<String> sorted = new ArrayList<>(names.size());
             sorted.addAll(names);
             Collections.sort(sorted);
+            sorted.remove("category|sub-category");
 
             for (String name : sorted) {
                 messageTextBuilder.append(name).append("\n");

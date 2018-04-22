@@ -1,17 +1,14 @@
 package org.telegram.commands;
 
 import com.cedricwalter.telegram.exceldbbot.ExcelHelper;
-import org.apache.poi.ss.usermodel.Row;
 import org.telegram.BotConfig;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
-import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
 public class PNGCommand extends WhiteListedUserBotCommand {
@@ -31,17 +28,16 @@ public class PNGCommand extends WhiteListedUserBotCommand {
         try {
             StringBuilder messageTextBuilder = new StringBuilder();
 
-            Set<String> names = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 0);
+            Set<String> names = excelHelper.getUniqueColumnValues( 0);
             for (String name : names) {
                 if (!fileExistsCaseSensitive(botConfig.getLogoPath() + name.trim() + ".png")) {
-                    messageTextBuilder.append(name.trim()+".png").append("\n");
+                    messageTextBuilder.append(name.trim() + ".png").append("\n");
                 }
             }
             String message = messageTextBuilder.toString();
             if (message.length() > 0) {
                 sendMessage(absSender, chat, "missing logo:\n" + message);
-            } else
-            {
+            } else {
                 sendMessage(absSender, chat, "Well done!!! All logo were found!");
             }
 
@@ -58,7 +54,6 @@ public class PNGCommand extends WhiteListedUserBotCommand {
             return false;
         }
     }
-
 
 
 }

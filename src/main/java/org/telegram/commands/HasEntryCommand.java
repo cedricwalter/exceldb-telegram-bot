@@ -1,19 +1,15 @@
 package org.telegram.commands;
 
 import com.cedricwalter.telegram.exceldbbot.ExcelHelper;
-import org.apache.poi.ss.usermodel.Row;
 import org.telegram.BotConfig;
-import org.telegram.services.Emoji;
-import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
-import org.telegram.telegrambots.bots.commands.BotCommand;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 public class HasEntryCommand extends WhiteListedUserBotCommand {
 
@@ -35,7 +31,7 @@ public class HasEntryCommand extends WhiteListedUserBotCommand {
 
                 System.out.println(String.format("/has %s from %s", entry, user.getUserName()));
 
-                List<Row> rows = excelHelper.hasEntry(botConfig.getExcel(), entry);
+                Set<List<Object>> rows = excelHelper.hasEntry( entry);
 
                 if (rows.size() > 0) {
                     // Only return ten first to not spam the users
@@ -54,16 +50,14 @@ public class HasEntryCommand extends WhiteListedUserBotCommand {
                 } else {
                     String newEntry = entry.replaceAll(" ", "-");
                     sendMessage(absSender, chat, "Found no entries " + entry + " you may want to add this entry using \n" +
-                            "/add "+newEntry+"         or\n" +
-                            "/add "+newEntry+" category-with-space subcategory-with-space www.acme.com\n"+ Emoji.NO_ENTRY_SIGN+" don't use space, replace them with -");
+                            "https://docs.google.com/forms/d/e/1FAIpQLSf9vE5sTtYjTSjQGdTOI5Lvv3FniBhH9Y4ROxyRqDgu6a777Q/viewform?usp=sf_link");
                 }
-            }
-            else {
+            } else {
                 sendMessage(absSender, chat, "Provide at least a search pattern, e.g /has google");
             }
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
-        } catch (IOException e) {
+        } catch (Exception e) {
             BotLogger.error(LOGTAG, e);
         }
     }

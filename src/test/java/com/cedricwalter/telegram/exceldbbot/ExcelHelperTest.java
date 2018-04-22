@@ -1,7 +1,5 @@
 package com.cedricwalter.telegram.exceldbbot;
 
-import org.apache.poi.ss.usermodel.Row;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,44 +26,34 @@ class ExcelHelperTest {
     }
 
     @Test
-    public void withIndexExcel_hasEntry_expectEntryNotFound() throws IOException {
+    public void withIndexExcel_hasEntry_expectEntryNotFound() throws Exception {
         // Arrange
         // Act
-        List<Row> rows = excelHelper.hasEntry(resource.getFile(), "anything-not-in-excel");
+        Set<List<Object>> rows = excelHelper.hasEntry("anything-not-in-excel");
 
         // Assert
         assertTrue(rows.size() == 0);
     }
 
     @Test
-    public void withIndexExcel_hasEntry_expectEntryFound() throws IOException {
+    public void withIndexExcel_hasEntry_expectEntryFound() throws Exception {
         // Arrange
         // Act
-        List<Row> rows = excelHelper.hasEntry(resource.getFile(), "cedric");
+        Set<List<Object>> rows = excelHelper.hasEntry("cedric");
 
         // Assert
         assertTrue(rows.size() > 0);
     }
 
     @Test
-    public void withIndexExcel_getCat_expectCategoriesFound() throws IOException {
+    public void withIndexExcel_getCat_expectCategoriesFound() throws Exception {
         // Arrange
         // Act
-        Set<String> uniqueColumnValues = excelHelper.getUniqueColumnValues(resource.getFile(), CATEGORY_COLUMN_INDEX);
+        Set<String> uniqueColumnValues = excelHelper.getUniqueColumnValues(CATEGORY_COLUMN_INDEX);
 
         // Assert
         assertThat(uniqueColumnValues.size(), is(2));
     }
 
-    @Test
-    public void withIndexExcel_getStats_expectStatsCorrect() throws IOException {
-        // Arrange
-        // Act
-        Map<String, String> stats = excelHelper.getStats(ExcelHelperTest.class.getResource("/src/test/resources/getStats-missingCategory.xlsx").getFile());
-
-        // Assert
-        String startup_missing_category = String.valueOf(stats.get("startup missing category"));
-        assertThat(startup_missing_category, is("1"));
-    }
 
 }

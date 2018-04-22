@@ -2,11 +2,9 @@ package org.telegram.commands;
 
 import com.cedricwalter.telegram.exceldbbot.ExcelHelper;
 import org.telegram.BotConfig;
-import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
-import org.telegram.telegrambots.bots.commands.BotCommand;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 
@@ -26,9 +24,9 @@ public class StatsCommand extends WhiteListedUserBotCommand {
     }
 
     @Override
-    public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) {
+    public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) throws Exception {
         try {
-            Map<String, String> stats = excelHelper.getStats(botConfig.getExcel());
+            Map<String, String> stats = excelHelper.getStats();
             StringBuilder stringBuilder = new StringBuilder();
             for (String key : stats.keySet()) {
                 stringBuilder.append(key).append("=").append(String.valueOf(stats.get(key))).append("\n");
@@ -38,8 +36,7 @@ public class StatsCommand extends WhiteListedUserBotCommand {
 
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             BotLogger.error(LOGTAG, e);
         }
     }

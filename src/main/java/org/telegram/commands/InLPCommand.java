@@ -29,7 +29,7 @@ public class InLPCommand extends WhiteListedUserBotCommand {
         try {
             StringBuilder messageTextBuilder = new StringBuilder();
 
-            Set<String> names = excelHelper.getNameForColumnMatching(botConfig.getExcel(), ExcelIndexes.IN_LP_COLUMN_INDEX, true);
+            Set<String> names = excelHelper.getNameForColumnMatching(ExcelIndexes.IN_LP_COLUMN_INDEX, true);
             int i = 1;
             for (String name : names) {
                 messageTextBuilder.append(" " + i++ + " " + name.trim()).append("\n");
@@ -51,7 +51,6 @@ public class InLPCommand extends WhiteListedUserBotCommand {
             return false;
         }
     }
-
 
 
 }

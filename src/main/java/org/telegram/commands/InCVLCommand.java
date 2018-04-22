@@ -29,7 +29,7 @@ public class InCVLCommand extends WhiteListedUserBotCommand {
         try {
             StringBuilder messageTextBuilder = new StringBuilder();
 
-            Set<String> names = excelHelper.getNameForColumnMatching(botConfig.getExcel(), ExcelIndexes.IN_CVL_COLUMN_INDEX, true);
+            Set<String> names = excelHelper.getNameForColumnMatching(ExcelIndexes.IN_CVL_COLUMN_INDEX, true);
             int i = 1;
             for (String name : names) {
                 messageTextBuilder.append(" " + i++ + " " + name.trim()).append("\n");
@@ -37,6 +37,8 @@ public class InCVLCommand extends WhiteListedUserBotCommand {
             String message = messageTextBuilder.toString();
             if (message.length() > 0) {
                 sendMessage(absSender, chat, "In CryptoValley Labs:\n" + message);
+            } else {
+                sendMessage(absSender, chat, "Found no companies in CryptoValley Labs" + message);
             }
         } catch (Exception e) {
             BotLogger.error(LOGTAG, e);
@@ -51,7 +53,6 @@ public class InCVLCommand extends WhiteListedUserBotCommand {
             return false;
         }
     }
-
 
 
 }

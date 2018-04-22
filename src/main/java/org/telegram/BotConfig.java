@@ -31,6 +31,7 @@ public class BotConfig {
     public String getUser() {
         return getProperty("user");
     }
+
     public String getLogoPath() {
         return getProperty("excelImages");
     }

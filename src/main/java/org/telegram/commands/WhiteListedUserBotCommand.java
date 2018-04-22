@@ -28,12 +28,12 @@ public abstract class WhiteListedUserBotCommand extends BotCommand {
 
             executeWhiteListedUser(absSender, user, chat, strings);
 
-        } catch (TelegramApiException e) {
+        } catch (Exception e) {
             BotLogger.error(LOGTAG, e);
         }
     }
 
-    public abstract void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] strings);
+    public abstract void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] strings) throws Exception;
 
     protected void sendMessage(AbsSender absSender, Chat chat, String text) throws TelegramApiException {
         SendMessage answer = new SendMessage();

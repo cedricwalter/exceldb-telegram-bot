@@ -1,11 +1,8 @@
 package com.cedricwalter.telegram.exceldbbot;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.telegram.BotConfig;
 
-import java.io.*;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -13,57 +10,44 @@ import java.util.regex.Pattern;
 public class ExcelHelper {
 
 
-    public Set<String> getStruct(String excelFileName) throws IOException {
-        XSSFWorkbook workbook = getWorkbook(excelFileName);
-
-        Sheet dataTypeSheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = dataTypeSheet.iterator();
-
+    public Set<String> getStruct() throws Exception {
         Set<String> potential = new HashSet<>();
-        while (iterator.hasNext()) {
-            Row currentRow = iterator.next();
-            Cell cellCat = currentRow.getCell(ExcelIndexes.CATEGORY_COLUMN_INDEX);
-            Cell cellSubCat = currentRow.getCell(ExcelIndexes.SUBCATEGORY_COLUMN_INDEX);
-            if (cellCat != null) {
-                potential.add(cellCat.getStringCellValue().replaceAll(" ", "-") + "|" + cellSubCat.getStringCellValue().replaceAll(" ", "-"));
+
+        List<List<Object>> rows = GoogleSheet.getRows();
+        for (List<Object> row : rows) {
+            String category = String.valueOf(row.get(ExcelIndexes.CATEGORY_COLUMN_INDEX));
+            String subcategory = String.valueOf(row.get(ExcelIndexes.SUBCATEGORY_COLUMN_INDEX));
+            if (category != null) {
+                potential.add(category.replaceAll(" ", "-") + "|" + subcategory.replaceAll(" ", "-"));
             }
         }
         return potential;
     }
 
-
-    public Set<String> getUniqueColumnValues(String excelFileName, int columnIndex) throws IOException {
-        XSSFWorkbook workbook = getWorkbook(excelFileName);
-
-        Sheet dataTypeSheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = dataTypeSheet.iterator();
-
+    public Set<String> getUniqueColumnValues(int columnIndex) throws Exception {
         Set<String> potential = new HashSet<>();
-        while (iterator.hasNext()) {
-            Row currentRow = iterator.next();
-            Cell cell = currentRow.getCell(columnIndex);
-            if (cell != null) {
-                potential.add(cell.getStringCellValue());
+
+        List<List<Object>> rows = GoogleSheet.getRows();
+        for (List<Object> row : rows) {
+            Object value = row.get(columnIndex);
+            if (value != null) {
+                potential.add(String.valueOf(value));
             }
         }
         return potential;
     }
 
-    public Set<String> getNameForColumnMatching(String excelFileName, int columnIndex, boolean value) throws IOException {
-        XSSFWorkbook workbook = getWorkbook(excelFileName);
-
-        Sheet dataTypeSheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = dataTypeSheet.iterator();
-
+    public Set<String> getNameForColumnMatching(int columnIndex, boolean value) throws Exception {
         Set<String> potential = new HashSet<>();
-        while (iterator.hasNext()) {
-            Row currentRow = iterator.next();
 
-            String isTop30 = getValueSafe(currentRow, columnIndex);
-            if (value == Boolean.valueOf(isTop30)) {
-                potential.add(getValueSafe(currentRow, ExcelIndexes.NAME_COLUMN_INDEX) + " (" +
-                        getValueSafe(currentRow, ExcelIndexes.CATEGORY_COLUMN_INDEX) + "/" +
-                        getValueSafe(currentRow, ExcelIndexes.SUBCATEGORY_COLUMN_INDEX) + ")"
+        List<List<Object>> rows = GoogleSheet.getRows();
+        for (List<Object> row : rows) {
+
+            String match = getValueSafe(row, columnIndex);
+            if (value == Boolean.valueOf(match)) {
+                potential.add(getValueSafe(row, ExcelIndexes.NAME_COLUMN_INDEX) + " (" +
+                        getValueSafe(row, ExcelIndexes.CATEGORY_COLUMN_INDEX) + "/" +
+                        getValueSafe(row, ExcelIndexes.SUBCATEGORY_COLUMN_INDEX) + ")"
                 );
             }
 
@@ -71,123 +55,72 @@ public class ExcelHelper {
         return potential;
     }
 
-    private String getValueSafe(Row currentRow, int columnIndex) {
-        String value = "";
-        Cell cell = currentRow.getCell(columnIndex);
-        if (cell != null) {
+    private String getValueSafe(List<Object> currentRow, int columnIndex) {
 
-            int cellType = cell.getCellType();
-            if (cellType == CellType.BOOLEAN.getCode()) {
-                value = String.valueOf(cell.getBooleanCellValue());
-            } else if (cellType == CellType.STRING.getCode()) {
-                value = cell.getStringCellValue();
-            }
-        }
-        return value;
+        Object obj = currentRow.size() > columnIndex ? currentRow.get(columnIndex) : "";
+
+        String string = String.valueOf(obj);
+        return string;
     }
 
+    public Set<List<Object>> hasEntry(String entry) throws Exception {
+        Set<List<Object>> potential = new HashSet<>();
 
-    public List<Row> hasEntry(String fileName, String entry) throws IOException {
-        XSSFWorkbook workbook = getWorkbook(fileName);
+        List<List<Object>> rows = GoogleSheet.getRows();
+        for (List<Object> row : rows) {
 
-        Sheet dataTypeSheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = dataTypeSheet.iterator();
+            String nameString = String.valueOf(row.get(ExcelIndexes.NAME_COLUMN_INDEX));
+            String urlString = String.valueOf(row.get(ExcelIndexes.URL_COLUMN_INDEX));
 
-        List<Row> potential = new ArrayList<>();
-        while (iterator.hasNext()) {
-            Row currentRow = iterator.next();
-
-            Cell nameCell = currentRow.getCell(ExcelIndexes.NAME_COLUMN_INDEX);
-            Cell urlCell = currentRow.getCell(ExcelIndexes.URL_COLUMN_INDEX);
-
-            if (nameCell != null && urlCell != null) {
+            if (nameString != null && urlString != null) {
 
                 Pattern compile = Pattern.compile(Pattern.quote(entry), Pattern.CASE_INSENSITIVE);
-                boolean inName = compile.matcher(nameCell.getStringCellValue()).find();
-                boolean inUrl = compile.matcher(urlCell.getStringCellValue()).find();
+                boolean inName = compile.matcher(nameString).find();
+                boolean inUrl = compile.matcher(urlString).find();
 
                 if (inName || inUrl) {
-                    potential.add(currentRow);
+                    potential.add(row);
                 }
             }
         }
         return potential;
     }
 
-    public int count(String fileName) throws IOException {
-        XSSFWorkbook workbook = getWorkbook(fileName);
-        Sheet dataTypeSheet = workbook.getSheetAt(0);
-
-        int rowNum = dataTypeSheet.getPhysicalNumberOfRows();
-
-        return rowNum;
+    public int count() throws Exception {
+        List<List<Object>> rows = GoogleSheet.getRows();
+        return rows.size();
     }
-
-    public boolean addEntry(String fileName, String name, String category, String subCategory, String url) throws IOException {
-        XSSFWorkbook workbook = getWorkbook(fileName);
-        Sheet dataTypeSheet = workbook.getSheetAt(0);
-
-        int rowNum = dataTypeSheet.getPhysicalNumberOfRows();
-        Row row = dataTypeSheet.createRow(rowNum++);
-
-        row.createCell(ExcelIndexes.NAME_COLUMN_INDEX).setCellValue(name);
-        row.createCell(ExcelIndexes.CATEGORY_COLUMN_INDEX).setCellValue(category);
-        row.createCell(ExcelIndexes.SUBCATEGORY_COLUMN_INDEX).setCellValue(subCategory);
-        row.createCell(ExcelIndexes.URL_COLUMN_INDEX).setCellValue(url);
-
-        try {
-            FileOutputStream outputStream = new FileOutputStream(fileName);
-            workbook.write(outputStream);
-            workbook.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return true;
-    }
-
 
     /**
      * Telegram has a max size message limit
      * return list of string no longer than 4096 bytes
      *
-     * @param excelRows
      * @return
      */
-    public static List<String> toString(List<Row> excelRows) {
-        List<String> rowList = new ArrayList<>(excelRows.size());
+    public static List<String> toString(Set<List<Object>> rows) {
+        List<String> rowList = new ArrayList<>(rows.size());
 
         //str.append("Too much results (" + rows.size() + "), displaying in condensed form\n\n");
-        for (Row row : excelRows) {
+        for (List<Object> row : rows) {
             StringBuilder str = new StringBuilder();
-            appendIfNotNull(str, row.getCell(ExcelIndexes.NAME_COLUMN_INDEX));
-            appendIfNotNull(str, row.getCell(ExcelIndexes.CATEGORY_COLUMN_INDEX));
-            appendIfNotNull(str, row.getCell(ExcelIndexes.SUBCATEGORY_COLUMN_INDEX));
-            appendIfNotNull(str, row.getCell(ExcelIndexes.URL_COLUMN_INDEX));
-            appendIfNotNull(str, row.getCell(ExcelIndexes.MOTTO_COLUMN_INDEX));
-            appendIfNotNull(str, row.getCell(ExcelIndexes.DESCRIPTION_COLUMN_INDEX));
+            appendIfNotNull(str, String.valueOf(row.get(ExcelIndexes.NAME_COLUMN_INDEX)));
+            appendIfNotNull(str, String.valueOf(row.get(ExcelIndexes.CATEGORY_COLUMN_INDEX)));
+            appendIfNotNull(str, String.valueOf(row.get(ExcelIndexes.SUBCATEGORY_COLUMN_INDEX)));
+            appendIfNotNull(str, String.valueOf(row.get(ExcelIndexes.URL_COLUMN_INDEX)));
+            appendIfNotNull(str, String.valueOf(row.get(ExcelIndexes.MOTTO_COLUMN_INDEX)));
+            appendIfNotNull(str, String.valueOf(row.get(ExcelIndexes.DESCRIPTION_COLUMN_INDEX)));
             rowList.add(str.toString());
         }
 
         return rowList;
     }
 
-    private static void appendIfNotNull(StringBuilder str, Cell categoriesCell) {
-        if (categoriesCell != null) {
-            str.append(categoriesCell.getStringCellValue());
-            str.append("  |  ");
-        }
+    private static void appendIfNotNull(StringBuilder str, String categoriesString) {
+        str.append(categoriesString);
+        str.append("  |  ");
     }
 
-    private XSSFWorkbook getWorkbook(String excelFileName) throws IOException {
-        FileInputStream excelFile = new FileInputStream(new File(excelFileName));
-
-        return new XSSFWorkbook(excelFile);
-    }
-
-    public Map<String, String> getStats(String excelFileName) throws IOException {
+    public Map<String, String> getStats() throws Exception {
         Map statistics = new TreeMap();
 
         BotConfig config = new BotConfig();
@@ -201,13 +134,13 @@ public class ExcelHelper {
         long missingLongCounter = 0;
         long missingLogo = 0;
 
-        XSSFWorkbook workbook = getWorkbook(excelFileName);
-        Sheet dataTypeSheet = workbook.getSheetAt(0);
-        Iterator<Row> iterator = dataTypeSheet.iterator();
+        Set<List<Object>> potential = new HashSet<>();
+
+        List<List<Object>> rows = GoogleSheet.getRows();
 
 
         StringBuilder missingLogoNames = new StringBuilder();
-        Set<String> names = getUniqueColumnValues(excelFileName, 0);
+        Set<String> names = getUniqueColumnValues(0);
         for (String name : names) {
             String trim = name.trim();
             if (!fileExistsCaseSensitive(config.getLogoPath() + trim + ".png")) {
@@ -223,8 +156,7 @@ public class ExcelHelper {
         StringBuilder missingSubCategory = new StringBuilder();
         StringBuilder missingMotto = new StringBuilder();
         StringBuilder missingDescription = new StringBuilder();
-        while (iterator.hasNext()) {
-            Row currentRow = iterator.next();
+        for (List<Object> currentRow : rows) {
 
             missingCategoryCounter = report(missingCategoryCounter, missingCategory, currentRow, ExcelIndexes.CATEGORY_COLUMN_INDEX);
             missingSubcategoryCounter = report(missingSubcategoryCounter, missingSubCategory, currentRow, ExcelIndexes.SUBCATEGORY_COLUMN_INDEX);
@@ -236,10 +168,8 @@ public class ExcelHelper {
             missingLongCounter = report(missingLongCounter, missingLong, currentRow, ExcelIndexes.LONG_COLUMN_INDEX);
         }
 
-        statistics.put("number of startup", dataTypeSheet.getPhysicalNumberOfRows());
+        statistics.put("number of startup", rows.size());
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-        statistics.put("Last modified", sdf.format(new File(excelFileName).lastModified()));
 
         addStats(statistics, missingLogo, missingLogoNames, "- missing logo");
         addStats(statistics, missingAddressesCounter, missingAddresses, "- missing addresses");
@@ -260,13 +190,13 @@ public class ExcelHelper {
         }
     }
 
-    private long report(long counter, StringBuilder stringBuilder, Row currentRow, int column) {
-        long l = incrementCounterIfCellEmpty(currentRow, column);
+    private long report(long counter, StringBuilder stringBuilder, List<Object> currentRow, int column) {
+        long l = incrementCounterIfStringEmpty(currentRow, column);
         if (l == 1) {
             counter += l;
-            Cell cell = currentRow.getCell(0);
-            if (cell != null) {
-                stringBuilder.append("   - ").append(cell.getStringCellValue()).append("\n");
+            String name = String.valueOf(currentRow.get(0));
+            if (name != null) {
+                stringBuilder.append("   - ").append(name).append("\n");
             }
         }
         return counter;
@@ -276,28 +206,16 @@ public class ExcelHelper {
         try {
             File file = new File(path);
             return file.exists() && file.getCanonicalFile().getName().equals(file.getName());
-        } catch (IOException e) {
+        } catch (Exception e) {
             return false;
         }
     }
 
 
-    private long incrementCounterIfCellEmpty(Row currentRow, int column) {
-        Cell cell = currentRow.getCell(column);
+    private long incrementCounterIfStringEmpty(List<Object> currentRow, int column) {
+        String string = java.lang.String.valueOf(currentRow.get(column));
         long index = 0;
-        if (cell != null) {
-
-            if (cell.getCellTypeEnum().equals(CellType.STRING)) {
-                String stringCellValue = cell.getStringCellValue().trim();
-                if (stringCellValue.length() == 0) {
-                    index++;
-                }
-            } else if (cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
-                if (cell.getNumericCellValue() == 0) {
-                    index++;
-                }
-            }
-        } else {
+        if ("".equals(string)) {
             index++;
         }
 

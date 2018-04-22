@@ -23,7 +23,7 @@ public class HelpCommand extends WhiteListedUserBotCommand {
 
     @Override
     public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] strings) {
-        StringBuilder helpMessageBuilder = new StringBuilder( "<b>Help</b> " + Emoji.AMBULANCE+ "\n\n" );
+        StringBuilder helpMessageBuilder = new StringBuilder("<b>Help</b> " + Emoji.AMBULANCE + "\n\n");
         helpMessageBuilder.append("These are the registered commands for this Bot:\n\n");
 
         for (BotCommand botCommand : commandRegistry.getRegisteredCommands()) {

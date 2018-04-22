@@ -29,7 +29,7 @@ public class Top30Command extends WhiteListedUserBotCommand {
         try {
             StringBuilder messageTextBuilder = new StringBuilder();
 
-            Set<String> names = excelHelper.getNameForColumnMatching(botConfig.getExcel(), ExcelIndexes.TOP30_COLUMN_INDEX, true);
+            Set<String> names = excelHelper.getNameForColumnMatching(ExcelIndexes.TOP30_COLUMN_INDEX, true);
             int i = 1;
             for (String name : names) {
                 messageTextBuilder.append(" " + i++ + " " + name.trim()).append("\n");
@@ -51,7 +51,6 @@ public class Top30Command extends WhiteListedUserBotCommand {
             return false;
         }
     }
-
 
 
 }

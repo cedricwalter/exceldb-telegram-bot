@@ -28,7 +28,7 @@ public class SVGCommand extends WhiteListedUserBotCommand {
         try {
             StringBuilder messageTextBuilder = new StringBuilder();
 
-            Set<String> names = excelHelper.getUniqueColumnValues(botConfig.getExcel(), 0);
+            Set<String> names = excelHelper.getUniqueColumnValues(0);
             for (String name : names) {
                 if (!fileExistsCaseSensitive(botConfig.getSVGPath() + name.trim() + ".svg")) {
                     System.out.println(name.trim());
@@ -38,8 +38,7 @@ public class SVGCommand extends WhiteListedUserBotCommand {
             String message = messageTextBuilder.toString();
             if (message.length() > 0) {
                 sendMessage(absSender, chat, "missing logo:\n" + message);
-            } else
-            {
+            } else {
                 sendMessage(absSender, chat, "Well done!!! All logo were found!");
             }
 
@@ -56,7 +55,6 @@ public class SVGCommand extends WhiteListedUserBotCommand {
             return false;
         }
     }
-
 
 
 }
