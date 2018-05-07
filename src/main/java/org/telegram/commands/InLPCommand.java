@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class InLPCommand extends WhiteListedUserBotCommand {
 
-    private static final String LOGTAG = "CVLCOMMAND";
+    private static final String LOGTAG = "LPCOMMAND";
     private final BotConfig botConfig;
     private final ExcelHelper excelHelper;
 
@@ -29,7 +29,7 @@ public class InLPCommand extends WhiteListedUserBotCommand {
         try {
             StringBuilder messageTextBuilder = new StringBuilder();
 
-            Set<String> names = excelHelper.getNameForColumnMatching(ExcelIndexes.IN_LP_COLUMN_INDEX, true);
+            Set<String> names = excelHelper.getNameForColumnMatching(ExcelIndexes.IN_LP_COLUMN_INDEX, "TRUE");
             int i = 1;
             for (String name : names) {
                 messageTextBuilder.append(" " + i++ + " " + name.trim()).append("\n");

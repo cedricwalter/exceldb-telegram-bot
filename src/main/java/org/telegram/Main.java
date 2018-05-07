@@ -15,6 +15,8 @@ public class Main {
     private static final String LOGTAG = "MAIN";
 
     public static void main(String[] args) {
+        System.out.println("Starting...");
+
         BotLogger.setLevel(Level.ALL);
         BotLogger.registerLogger(new ConsoleHandler());
         try {
@@ -35,6 +37,7 @@ public class Main {
         } catch (Exception e) {
             BotLogger.error(LOGTAG, e);
         }
+        System.out.println("BOT started!");
     }
 
     private static TelegramBotsApi createTelegramBotsApi() throws TelegramApiException {

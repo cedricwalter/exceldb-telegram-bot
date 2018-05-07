@@ -31,6 +31,10 @@ public class GoogleSheet {
     private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY);
     private static final String CLIENT_SECRET_DIR = "/client_secret.json";
 
+    private static String CRYPTOVALLEY_DIRECTORY_SHEET_ID = "1Awu0tOG8MBzWU8odiQS9LSW1Y1qqZ8QJaxn96QK87a4";
+    private static String TOP30_DIRECTORY_SHEET_ID = "1cum9GOnjKZ-WiR_AiynmgjA5Jy8gL2QcMtPi974C-HU";
+
+
     /**
      * Creates an authorized Credential object.
      *
@@ -52,25 +56,29 @@ public class GoogleSheet {
         return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
     }
 
-    public static List<List<Object>> getRows() throws Exception {
+    public static List<List<Object>> getCryptoValleyDirectoryRows() throws Exception {
+        return getRows(CRYPTOVALLEY_DIRECTORY_SHEET_ID, "active!A:AF");
+    }
+
+    public static List<List<Object>> getTop30() throws Exception {
+        return getRows(TOP30_DIRECTORY_SHEET_ID, "top30!A:Z");
+    }
+
+    public static List<List<Object>> getRows(String sheetId, String range) throws Exception {
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-        final String spreadsheetId = "1Awu0tOG8MBzWU8odiQS9LSW1Y1qqZ8QJaxn96QK87a4";
-        final String range = "active!A:Z";
+
         Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
         ValueRange response = service.spreadsheets().values()
-                .get(spreadsheetId, range)
+                .get(sheetId, range)
                 .execute();
-        List<List<Object>> values = response.getValues();
-        if (values == null || values.isEmpty())
 
-        {
+        List<List<Object>> values = response.getValues();
+        if (values == null || values.isEmpty()) {
             System.out.println("No data found.");
             return null;
-        } else
-
-        {
+        } else {
             return values;
         }
     }

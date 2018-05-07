@@ -29,7 +29,7 @@ public class InCVLCommand extends WhiteListedUserBotCommand {
         try {
             StringBuilder messageTextBuilder = new StringBuilder();
 
-            Set<String> names = excelHelper.getNameForColumnMatching(ExcelIndexes.IN_CVL_COLUMN_INDEX, true);
+            Set<String> names = excelHelper.getNameForColumnMatching(ExcelIndexes.IN_CVL_COLUMN_INDEX, "TRUE");
             int i = 1;
             for (String name : names) {
                 messageTextBuilder.append(" " + i++ + " " + name.trim()).append("\n");

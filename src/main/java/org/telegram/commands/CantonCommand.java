@@ -12,14 +12,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-public class Top30Command extends WhiteListedUserBotCommand {
+public class CantonCommand extends WhiteListedUserBotCommand {
 
-    private static final String LOGTAG = "SVGCOMMAND";
+    private static final String LOGTAG = "LPCOMMAND";
     private final BotConfig botConfig;
     private final ExcelHelper excelHelper;
 
-    public Top30Command() {
-        super("top30", "return top 30 companies");
+    public CantonCommand() {
+        super("incanton", "return list of companies in Canton, ex: /incanton ZH");
         botConfig = new BotConfig();
         excelHelper = new ExcelHelper();
     }
@@ -29,14 +29,22 @@ public class Top30Command extends WhiteListedUserBotCommand {
         try {
             StringBuilder messageTextBuilder = new StringBuilder();
 
-            Set<String> names = excelHelper.getNameForColumnMatching(ExcelIndexes.TOP30_COLUMN_INDEX, true);
-            int i = 1;
-            for (String name : names) {
-                messageTextBuilder.append(" " + i++ + " " + name.trim()).append("\n");
-            }
-            String message = messageTextBuilder.toString();
-            if (message.length() > 0) {
-                sendMessage(absSender, chat, "Top30:\n" + message);
+            if (arguments != null && arguments.length > 0) {
+                String canton = arguments[0];
+                Set<String> names = excelHelper.getNameForColumnMatching(ExcelIndexes.CANTON_COLUMN_INDEX, canton);
+                int i = 1;
+                for (String name : names) {
+                    messageTextBuilder.append(" " + i++ + " " + name.trim()).append("\n");
+
+                    if (i % 10 == 0) {
+                        String message = messageTextBuilder.toString();
+                        sendMessage(absSender, chat, message);
+                        messageTextBuilder = new StringBuilder();
+                    }
+                }
+
+            } else {
+                sendMessage(absSender, chat, "Provide at least a search pattern, e.g /incanton ZH");
             }
         } catch (Exception e) {
             BotLogger.error(LOGTAG, e);

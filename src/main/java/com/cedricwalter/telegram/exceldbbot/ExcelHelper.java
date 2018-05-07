@@ -13,7 +13,7 @@ public class ExcelHelper {
     public Set<String> getStruct() throws Exception {
         Set<String> potential = new HashSet<>();
 
-        List<List<Object>> rows = GoogleSheet.getRows();
+        List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
         for (List<Object> row : rows) {
             String category = String.valueOf(row.get(ExcelIndexes.CATEGORY_COLUMN_INDEX));
             String subcategory = String.valueOf(row.get(ExcelIndexes.SUBCATEGORY_COLUMN_INDEX));
@@ -27,7 +27,7 @@ public class ExcelHelper {
     public Set<String> getUniqueColumnValues(int columnIndex) throws Exception {
         Set<String> potential = new HashSet<>();
 
-        List<List<Object>> rows = GoogleSheet.getRows();
+        List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
         for (List<Object> row : rows) {
             Object value = row.get(columnIndex);
             if (value != null) {
@@ -37,14 +37,14 @@ public class ExcelHelper {
         return potential;
     }
 
-    public Set<String> getNameForColumnMatching(int columnIndex, boolean value) throws Exception {
+    public Set<String> getNameForColumnMatching(int columnIndex, String value) throws Exception {
         Set<String> potential = new HashSet<>();
 
-        List<List<Object>> rows = GoogleSheet.getRows();
+        List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
         for (List<Object> row : rows) {
 
             String match = getValueSafe(row, columnIndex);
-            if (value == Boolean.valueOf(match)) {
+            if (match.equals(value)) {
                 potential.add(getValueSafe(row, ExcelIndexes.NAME_COLUMN_INDEX) + " (" +
                         getValueSafe(row, ExcelIndexes.CATEGORY_COLUMN_INDEX) + "/" +
                         getValueSafe(row, ExcelIndexes.SUBCATEGORY_COLUMN_INDEX) + ")"
@@ -55,7 +55,7 @@ public class ExcelHelper {
         return potential;
     }
 
-    private String getValueSafe(List<Object> currentRow, int columnIndex) {
+    public static String getValueSafe(List<Object> currentRow, int columnIndex) {
 
         Object obj = currentRow.size() > columnIndex ? currentRow.get(columnIndex) : "";
 
@@ -66,7 +66,7 @@ public class ExcelHelper {
     public Set<List<Object>> hasEntry(String entry) throws Exception {
         Set<List<Object>> potential = new HashSet<>();
 
-        List<List<Object>> rows = GoogleSheet.getRows();
+        List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
         for (List<Object> row : rows) {
 
             String nameString = String.valueOf(row.get(ExcelIndexes.NAME_COLUMN_INDEX));
@@ -87,7 +87,7 @@ public class ExcelHelper {
     }
 
     public int count() throws Exception {
-        List<List<Object>> rows = GoogleSheet.getRows();
+        List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
         return rows.size();
     }
 
@@ -136,7 +136,7 @@ public class ExcelHelper {
 
         Set<List<Object>> potential = new HashSet<>();
 
-        List<List<Object>> rows = GoogleSheet.getRows();
+        List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
 
 
         StringBuilder missingLogoNames = new StringBuilder();
