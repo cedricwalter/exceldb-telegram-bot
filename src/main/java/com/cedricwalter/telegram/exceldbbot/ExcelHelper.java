@@ -3,20 +3,18 @@ package com.cedricwalter.telegram.exceldbbot;
 import org.telegram.BotConfig;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class ExcelHelper {
-
 
     public Set<String> getStruct() throws Exception {
         Set<String> potential = new HashSet<>();
 
         List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
         for (List<Object> row : rows) {
-            String category = String.valueOf(row.get(ExcelIndexes.CATEGORY_COLUMN_INDEX));
-            String subcategory = String.valueOf(row.get(ExcelIndexes.SUBCATEGORY_COLUMN_INDEX));
+            String category = getValueSafe(row, ExcelIndexes.CATEGORY_COLUMN_INDEX);
+            String subcategory = getValueSafe(row, ExcelIndexes.SUBCATEGORY_COLUMN_INDEX);
             if (category != null) {
                 potential.add(category.replaceAll(" ", "-") + "|" + subcategory.replaceAll(" ", "-"));
             }
@@ -69,8 +67,8 @@ public class ExcelHelper {
         List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
         for (List<Object> row : rows) {
 
-            String nameString = String.valueOf(row.get(ExcelIndexes.NAME_COLUMN_INDEX));
-            String urlString = String.valueOf(row.get(ExcelIndexes.URL_COLUMN_INDEX));
+            String nameString = getValueSafe(row, ExcelIndexes.NAME_COLUMN_INDEX);
+            String urlString = getValueSafe(row, ExcelIndexes.URL_COLUMN_INDEX);
 
             if (nameString != null && urlString != null) {
 
@@ -103,12 +101,12 @@ public class ExcelHelper {
         //str.append("Too much results (" + rows.size() + "), displaying in condensed form\n\n");
         for (List<Object> row : rows) {
             StringBuilder str = new StringBuilder();
-            appendIfNotNull(str, String.valueOf(row.get(ExcelIndexes.NAME_COLUMN_INDEX)));
-            appendIfNotNull(str, String.valueOf(row.get(ExcelIndexes.CATEGORY_COLUMN_INDEX)));
-            appendIfNotNull(str, String.valueOf(row.get(ExcelIndexes.SUBCATEGORY_COLUMN_INDEX)));
-            appendIfNotNull(str, String.valueOf(row.get(ExcelIndexes.URL_COLUMN_INDEX)));
-            appendIfNotNull(str, String.valueOf(row.get(ExcelIndexes.MOTTO_COLUMN_INDEX)));
-            appendIfNotNull(str, String.valueOf(row.get(ExcelIndexes.DESCRIPTION_COLUMN_INDEX)));
+            appendIfNotNull(str, getValueSafe(row, ExcelIndexes.NAME_COLUMN_INDEX));
+            appendIfNotNull(str, getValueSafe(row, ExcelIndexes.CATEGORY_COLUMN_INDEX));
+            appendIfNotNull(str, getValueSafe(row, ExcelIndexes.SUBCATEGORY_COLUMN_INDEX));
+            appendIfNotNull(str, getValueSafe(row, ExcelIndexes.URL_COLUMN_INDEX));
+            appendIfNotNull(str, getValueSafe(row, ExcelIndexes.MOTTO_COLUMN_INDEX));
+            appendIfNotNull(str, getValueSafe(row, ExcelIndexes.DESCRIPTION_COLUMN_INDEX));
             rowList.add(str.toString());
         }
 

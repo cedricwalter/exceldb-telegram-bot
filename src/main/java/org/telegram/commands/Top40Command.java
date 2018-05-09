@@ -37,7 +37,7 @@ public class Top40Command extends WhiteListedUserBotCommand {
             }
             String message = messageTextBuilder.toString();
             if (message.length() > 0) {
-                sendMessage(absSender, chat, "Top30:\n" + message);
+                sendMessage(absSender, chat, "Top40:\n" + message);
             }
             sendMessage(absSender, chat, "see https://docs.google.com/spreadsheets/d/1cum9GOnjKZ-WiR_AiynmgjA5Jy8gL2QcMtPi974C-HU for more details");
 

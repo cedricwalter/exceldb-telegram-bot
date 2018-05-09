@@ -32,15 +32,23 @@ public class CantonCommand extends WhiteListedUserBotCommand {
             if (arguments != null && arguments.length > 0) {
                 String canton = arguments[0];
                 Set<String> names = excelHelper.getNameForColumnMatching(ExcelIndexes.CANTON_COLUMN_INDEX, canton);
-                int i = 1;
-                for (String name : names) {
-                    messageTextBuilder.append(" " + i++ + " " + name.trim()).append("\n");
+                int size = names.size();
+                if (size > 0) {
+                    int i = 1;
+                    for (String name : names) {
+                        messageTextBuilder.append(" " + i++ + " " + name.trim()).append("\n");
 
-                    if (i % 10 == 0) {
-                        String message = messageTextBuilder.toString();
-                        sendMessage(absSender, chat, message);
-                        messageTextBuilder = new StringBuilder();
+                        if (i % 10 == 0) {
+                            String message = messageTextBuilder.toString();
+                            sendMessage(absSender, chat, message);
+                            messageTextBuilder = new StringBuilder();
+                        } else if (size < 10){
+                            String message = messageTextBuilder.toString();
+                            sendMessage(absSender, chat, message);
+                        }
                     }
+                } else {
+                    sendMessage(absSender, chat, "No companies found in canton " + canton);
                 }
 
             } else {

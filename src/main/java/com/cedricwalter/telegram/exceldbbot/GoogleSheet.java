@@ -61,7 +61,7 @@ public class GoogleSheet {
     }
 
     public static List<List<Object>> getTop30() throws Exception {
-        return getRows(TOP30_DIRECTORY_SHEET_ID, "top30!A:Z");
+        return getRows(TOP30_DIRECTORY_SHEET_ID, "TOP 40 - active!A:AA");
     }
 
     public static List<List<Object>> getRows(String sheetId, String range) throws Exception {
