@@ -25,19 +25,18 @@ public class StatsCommand extends WhiteListedUserBotCommand {
 
     @Override
     public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) throws Exception {
+        Map<String, String> stats = excelHelper.getStats();
         try {
-            Map<String, String> stats = excelHelper.getStats();
-            StringBuilder stringBuilder = new StringBuilder();
+
             for (String key : stats.keySet()) {
+                StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append(key).append("=").append(String.valueOf(stats.get(key))).append("\n");
+                sendMessage(absSender, chat, stringBuilder.toString());
             }
 
-            sendMessage(absSender, chat, stringBuilder.toString());
 
         } catch (TelegramApiException e) {
-            BotLogger.error(LOGTAG, e);
-        } catch (IOException e) {
-            BotLogger.error(LOGTAG, e);
+            BotLogger.error(LOGTAG + stats, e);
         }
     }
 }

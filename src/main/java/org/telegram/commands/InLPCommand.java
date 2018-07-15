@@ -33,11 +33,17 @@ public class InLPCommand extends WhiteListedUserBotCommand {
             int i = 1;
             for (String name : names) {
                 messageTextBuilder.append(" " + i++ + " " + name.trim()).append("\n");
+
+                if (i == 10) {
+                    sendMessage(absSender, chat, "In LakeSide Labs:\n" + messageTextBuilder.toString());
+                    messageTextBuilder = new StringBuilder();
+                } else if (i % 10 == 0) {
+                    sendMessage(absSender, chat, messageTextBuilder.toString());
+                    messageTextBuilder = new StringBuilder();
+                }
+
             }
-            String message = messageTextBuilder.toString();
-            if (message.length() > 0) {
-                sendMessage(absSender, chat, "In LakeSide Partners:\n" + message);
-            }
+
         } catch (Exception e) {
             BotLogger.error(LOGTAG, e);
         }

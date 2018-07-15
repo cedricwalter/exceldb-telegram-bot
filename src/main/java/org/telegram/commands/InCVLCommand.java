@@ -33,12 +33,15 @@ public class InCVLCommand extends WhiteListedUserBotCommand {
             int i = 1;
             for (String name : names) {
                 messageTextBuilder.append(" " + i++ + " " + name.trim()).append("\n");
-            }
-            String message = messageTextBuilder.toString();
-            if (message.length() > 0) {
-                sendMessage(absSender, chat, "In CryptoValley Labs:\n" + message);
-            } else {
-                sendMessage(absSender, chat, "Found no companies in CryptoValley Labs" + message);
+
+                if (i == 10) {
+                    sendMessage(absSender, chat, "In CryptoValley Labs:\n" + messageTextBuilder.toString());
+                    messageTextBuilder = new StringBuilder();
+                } else if (i % 10 == 0) {
+                    sendMessage(absSender, chat, messageTextBuilder.toString());
+                    messageTextBuilder = new StringBuilder();
+                }
+
             }
         } catch (Exception e) {
             BotLogger.error(LOGTAG, e);

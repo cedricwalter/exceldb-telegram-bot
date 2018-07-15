@@ -3,6 +3,9 @@ package com.cedricwalter.telegram.exceldbbot;
 import org.telegram.BotConfig;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -121,8 +124,6 @@ public class ExcelHelper {
     public Map<String, String> getStats() throws Exception {
         Map statistics = new TreeMap();
 
-        BotConfig config = new BotConfig();
-
         long missingCategoryCounter = 0;
         long missingSubcategoryCounter = 0;
         long missingMottoCounter = 0;
@@ -132,20 +133,20 @@ public class ExcelHelper {
         long missingLongCounter = 0;
         long missingLogo = 0;
 
-        Set<List<Object>> potential = new HashSet<>();
-
         List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
 
-
-        StringBuilder missingLogoNames = new StringBuilder();
-        Set<String> names = getUniqueColumnValues(0);
-        for (String name : names) {
-            String trim = name.trim();
-            if (!fileExistsCaseSensitive(config.getLogoPath() + trim + ".png")) {
-                missingLogoNames.append(trim + ".png").append("\n");
-                missingLogo++;
-            }
-        }
+//        StringBuilder missingLogoNames = new StringBuilder();
+//        Set<String> names = getUniqueColumnValues(0);
+//        for (String name : names) {
+//            String trim = name.trim();
+//
+//            if (!exists("https://cryptovalley.directory/svg/" + trim + ".svg")) {
+//                if (!exists("https://cryptovalley.directory/logo/" + trim + ".png")) {
+//                    missingLogoNames.append(trim + ".png").append("\n");
+//                    missingLogo++;
+//                }
+//            }
+//        }
 
         StringBuilder missingAddresses = new StringBuilder();
         StringBuilder missingLat = new StringBuilder();
@@ -169,7 +170,7 @@ public class ExcelHelper {
         statistics.put("number of startup", rows.size());
 
 
-        addStats(statistics, missingLogo, missingLogoNames, "- missing logo");
+       // addStats(statistics, missingLogo, missingLogoNames, "- missing logo");
         addStats(statistics, missingAddressesCounter, missingAddresses, "- missing addresses");
         addStats(statistics, missingCategoryCounter, missingCategory, "- missing category");
         addStats(statistics, missingSubcategoryCounter, missingSubCategory, "- missing subcategory");
@@ -181,6 +182,23 @@ public class ExcelHelper {
 
         return statistics;
     }
+
+    public static boolean exists(String URLName){
+        try {
+            HttpURLConnection.setFollowRedirects(false);
+            // note : you may also need
+            //        HttpURLConnection.setInstanceFollowRedirects(false)
+            HttpURLConnection con =
+                    (HttpURLConnection) new URL(URLName).openConnection();
+            con.setRequestMethod("HEAD");
+            return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     private void addStats(Map statistics, long counter, StringBuilder stringBuilder, String message) {
         if (counter != 0) {
