@@ -11,7 +11,7 @@ public class ExcelHelper {
     public Set<String> getStruct() throws Exception {
         Set<String> potential = new HashSet<>();
 
-        List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
+        List<List<Object>> rows = GoogleSheet.getSwissRows();
         for (List<Object> row : rows) {
             String category = getValueSafe(row, ExcelIndexes.CATEGORY_COLUMN_INDEX);
             String subcategory = getValueSafe(row, ExcelIndexes.SUBCATEGORY_COLUMN_INDEX);
@@ -25,7 +25,7 @@ public class ExcelHelper {
     public Set<String> getUniqueColumnValues(int columnIndex) throws Exception {
         Set<String> potential = new LinkedHashSet<>();
 
-        List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
+        List<List<Object>> rows = GoogleSheet.getSwissRows();
         for (List<Object> row : rows) {
             if (row.size() < columnIndex) {
                 continue;
@@ -43,7 +43,7 @@ public class ExcelHelper {
     public Set<String> getNameForColumnMatching(int columnIndex, String value) throws Exception {
         Set<String> potential = new HashSet<>();
 
-        List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
+        List<List<Object>> rows = GoogleSheet.getSwissRows();
         for (List<Object> row : rows) {
 
             String match = getValueSafe(row, columnIndex);
@@ -66,11 +66,10 @@ public class ExcelHelper {
         return string;
     }
 
-    public Set<List<Object>> hasEntry(String entry) throws Exception {
+    public Set<List<Object>> hasEntry(String entry, List<List<Object>> source) throws Exception {
         Set<List<Object>> potential = new HashSet<>();
 
-        List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
-        for (List<Object> row : rows) {
+        for (List<Object> row : source) {
 
             String nameString = getValueSafe(row, ExcelIndexes.NAME_COLUMN_INDEX);
             String urlString = getValueSafe(row, ExcelIndexes.URL_COLUMN_INDEX);
@@ -89,10 +88,7 @@ public class ExcelHelper {
         return potential;
     }
 
-    public int count() throws Exception {
-        List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
-        return rows.size();
-    }
+
 
     /**
      * Telegram has a max size message limit
@@ -135,7 +131,7 @@ public class ExcelHelper {
         long missingLongCounter = 0;
         long missingLogo = 0;
 
-        List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
+        List<List<Object>> rows = GoogleSheet.getSwissRows();
 
 //        StringBuilder missingLogoNames = new StringBuilder();
 //        Set<String> names = getUniqueColumnValues(0);

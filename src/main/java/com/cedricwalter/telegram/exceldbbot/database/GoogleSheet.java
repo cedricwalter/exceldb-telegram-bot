@@ -36,7 +36,9 @@ public class GoogleSheet {
     );
     private static final String CLIENT_SECRET_DIR = "/client_secret.json2";
 
-    private static String CRYPTOVALLEY_DIRECTORY_SHEET_ID = "1Awu0tOG8MBzWU8odiQS9LSW1Y1qqZ8QJaxn96QK87a4";
+    private static String SWISS_SHEET_ID = "1Awu0tOG8MBzWU8odiQS9LSW1Y1qqZ8QJaxn96QK87a4";
+    private static String SINGAPORE_SHEET_ID = "1p9EnDgNa4zzcAJvLQHhcbdReYD3_hwTBQThCgqJRXrY";
+
     private static String TOP30_DIRECTORY_SHEET_ID = "1cum9GOnjKZ-WiR_AiynmgjA5Jy8gL2QcMtPi974C-HU";
 
 
@@ -61,9 +63,14 @@ public class GoogleSheet {
         return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
     }
 
-    public static List<List<Object>> getCryptoValleyDirectoryRows() throws Exception {
-        return getRows(CRYPTOVALLEY_DIRECTORY_SHEET_ID, "active!A:AZ");
+    public static List<List<Object>> getSwissRows() throws Exception {
+        return getRows(SWISS_SHEET_ID, "active!A:AZ");
     }
+
+    public static List<List<Object>> getSingaporeRows() throws Exception {
+        return getRows(SWISS_SHEET_ID, "active!A:AZ");
+    }
+
 
     public static List<List<Object>> getTop30() throws Exception {
         return getRows(TOP30_DIRECTORY_SHEET_ID, "TOP 40 - active!A:AA");
@@ -122,7 +129,7 @@ public class GoogleSheet {
                 .setData(data);
 
         BatchUpdateValuesResponse result =
-                service.spreadsheets().values().batchUpdate(CRYPTOVALLEY_DIRECTORY_SHEET_ID, body).execute();
+                service.spreadsheets().values().batchUpdate(SWISS_SHEET_ID, body).execute();
         System.out.printf("%d cells updated.", result.getTotalUpdatedCells());
     }
 

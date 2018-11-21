@@ -2,6 +2,7 @@ package com.cedricwalter.telegram.exceldbbot.commands;
 
 import com.cedricwalter.telegram.exceldbbot.BotConfig;
 import com.cedricwalter.telegram.exceldbbot.database.ExcelHelper;
+import com.cedricwalter.telegram.exceldbbot.database.GoogleSheet;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
@@ -31,14 +32,15 @@ public class HasEntryCommand extends WhiteListedUserBotCommand {
 
                 System.out.println(String.format("/has %s from %s", entry, user.getUserName()));
 
-                Set<List<Object>> rows = excelHelper.hasEntry(entry);
+                Set<List<Object>> SwissRows = excelHelper.hasEntry(entry, GoogleSheet.getSwissRows());
+                Set<List<Object>> singaporeRows = excelHelper.hasEntry(entry, GoogleSheet.getSingaporeRows());
 
-                if (rows.size() > 0) {
+                if (SwissRows.size() > 0) {
                     // Only return ten first to not spam the users
-                    List<String> rowList = ExcelHelper.toString(rows);
+                    List<String> rowList = ExcelHelper.toString(SwissRows);
                     if (rowList.size() > 10) {
 
-                        String text = "Found too much entries " + rowList.size() + " returning only 10 first entries.";
+                        String text = "In Switzerland, found too much entries " + rowList.size() + " returning only 10 first entries.";
                         sendMessage(absSender, chat, text);
 
                         rowList = rowList.subList(0, 10);
@@ -47,7 +49,22 @@ public class HasEntryCommand extends WhiteListedUserBotCommand {
                     for (String result : rowList) {
                         sendMessage(absSender, chat, result);
                     }
-                } else {
+                } else if (singaporeRows.size() > 0) {
+                    // Only return ten first to not spam the users
+                    List<String> rowList = ExcelHelper.toString(singaporeRows);
+                    if (rowList.size() > 10) {
+
+                        String text = "In Singapore, found too much entries " + rowList.size() + " returning only 10 first entries.";
+                        sendMessage(absSender, chat, text);
+
+                        rowList = rowList.subList(0, 10);
+                    }
+
+                    for (String result : rowList) {
+                        sendMessage(absSender, chat, result);
+                    }
+                }
+                else {
                     String newEntry = entry.replaceAll(" ", "-");
                     sendMessage(absSender, chat, "Found no entries " + entry + " you may want to add this entry using \n" +
                             "https://docs.google.com/forms/d/e/1FAIpQLSf9vE5sTtYjTSjQGdTOI5Lvv3FniBhH9Y4ROxyRqDgu6a777Q/viewform?usp=sf_link");
