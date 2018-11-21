@@ -172,7 +172,7 @@ public class ExcelHelper {
         statistics.put("number of startup", rows.size());
 
 
-       // addStats(statistics, missingLogo, missingLogoNames, "- missing logo");
+        // addStats(statistics, missingLogo, missingLogoNames, "- missing logo");
         addStats(statistics, missingAddressesCounter, missingAddresses, "- missing addresses");
         addStats(statistics, missingCategoryCounter, missingCategory, "- missing category");
         addStats(statistics, missingSubcategoryCounter, missingSubCategory, "- missing subcategory");
@@ -185,7 +185,7 @@ public class ExcelHelper {
         return statistics;
     }
 
-    public static boolean exists(String URLName){
+    public static boolean exists(String URLName) {
         try {
             HttpURLConnection.setFollowRedirects(false);
             // note : you may also need
@@ -194,8 +194,7 @@ public class ExcelHelper {
                     (HttpURLConnection) new URL(URLName).openConnection();
             con.setRequestMethod("HEAD");
             return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }

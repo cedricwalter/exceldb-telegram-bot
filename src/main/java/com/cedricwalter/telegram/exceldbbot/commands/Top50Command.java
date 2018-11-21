@@ -1,26 +1,26 @@
 package com.cedricwalter.telegram.exceldbbot.commands;
 
+import com.cedricwalter.telegram.exceldbbot.BotConfig;
 import com.cedricwalter.telegram.exceldbbot.database.ExcelHelper;
 import com.cedricwalter.telegram.exceldbbot.database.ExcelIndexes;
 import com.cedricwalter.telegram.exceldbbot.database.GoogleSheet;
-import com.cedricwalter.telegram.exceldbbot.BotConfig;
-import org.telegram.telegrambots.api.objects.Chat;
-import org.telegram.telegrambots.api.objects.User;
-import org.telegram.telegrambots.bots.AbsSender;
-import org.telegram.telegrambots.logging.BotLogger;
+import org.telegram.telegrambots.meta.api.objects.Chat;
+import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.bots.AbsSender;
+import org.telegram.telegrambots.meta.logging.BotLogger;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Top40Command extends WhiteListedUserBotCommand {
+public class Top50Command extends WhiteListedUserBotCommand {
 
     private static final String LOGTAG = "SVGCOMMAND";
     private final BotConfig botConfig;
     private final ExcelHelper excelHelper;
 
-    public Top40Command() {
-        super("top40", "return top 40 companies");
+    public Top50Command() {
+        super("top50", "return top 40 companies");
         botConfig = new BotConfig();
         excelHelper = new ExcelHelper();
     }

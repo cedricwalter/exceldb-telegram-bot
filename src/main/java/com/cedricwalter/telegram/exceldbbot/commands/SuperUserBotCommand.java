@@ -9,11 +9,11 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
-public abstract class WhiteListedUserBotCommand extends BotCommand {
+public abstract class SuperUserBotCommand extends BotCommand {
 
     private static final String LOGTAG = "USERPERMISSIONS";
 
-    public WhiteListedUserBotCommand(String commandIdentifier, String description) {
+    public SuperUserBotCommand(String commandIdentifier, String description) {
         super(commandIdentifier, description);
     }
 
@@ -26,14 +26,14 @@ public abstract class WhiteListedUserBotCommand extends BotCommand {
                 return;
             }
 
-            executeWhiteListedUser(absSender, user, chat, strings);
+            executeSuperdUser(absSender, user, chat, strings);
 
         } catch (Exception e) {
             BotLogger.error(LOGTAG, e);
         }
     }
 
-    public abstract void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] strings) throws Exception;
+    public abstract void executeSuperdUser(AbsSender absSender, User user, Chat chat, String[] strings) throws Exception;
 
     protected void sendMessage(AbsSender absSender, Chat chat, String text) throws TelegramApiException {
         SendMessage answer = new SendMessage();
