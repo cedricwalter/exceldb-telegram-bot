@@ -23,3 +23,7 @@ local.properties
 
 ### Maven
 target/
+
+src/main/resources/config.properties
+src/main/resources/client_secret.json2
+credentials
