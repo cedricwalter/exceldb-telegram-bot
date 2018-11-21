@@ -1,11 +1,11 @@
 package com.cedricwalter.telegram.exceldbbot.commands;
 
-import com.cedricwalter.telegram.exceldbbot.database.ExcelHelper;
 import com.cedricwalter.telegram.exceldbbot.BotConfig;
-import org.telegram.telegrambots.api.objects.Chat;
-import org.telegram.telegrambots.api.objects.User;
-import org.telegram.telegrambots.bots.AbsSender;
-import org.telegram.telegrambots.logging.BotLogger;
+import com.cedricwalter.telegram.exceldbbot.database.ExcelHelper;
+import org.telegram.telegrambots.meta.api.objects.Chat;
+import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.bots.AbsSender;
+import org.telegram.telegrambots.meta.logging.BotLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +28,7 @@ public class PNGCommand extends WhiteListedUserBotCommand {
         try {
             StringBuilder messageTextBuilder = new StringBuilder();
 
-            Set<String> names = excelHelper.getUniqueColumnValues( 0);
+            Set<String> names = excelHelper.getUniqueColumnValues(0);
             for (String name : names) {
                 if (!fileExistsCaseSensitive(botConfig.getLogoPath() + name.trim() + ".png")) {
                     messageTextBuilder.append(name.trim() + ".png").append("\n");

@@ -88,21 +88,21 @@ public class GoogleSheet {
         }
     }
 
-    public static ArrayList<ValueRange>  addUpdateSocial(int i,
-                                                         String twitter,
-                                                         String telegram,
-                                                         String facebook,
-                                                         String slack,
-                                                         String reddit,
-                                                         String forum,
-                                                         String github,
-                                                         String medium,
-                                                         String youtube,
-                                                         String linkedin,
-                                                         ArrayList<ValueRange> data) {
+    public static ArrayList<ValueRange> addUpdateSocial(int i,
+                                                        String twitter,
+                                                        String telegram,
+                                                        String facebook,
+                                                        String slack,
+                                                        String reddit,
+                                                        String forum,
+                                                        String github,
+                                                        String medium,
+                                                        String youtube,
+                                                        String linkedin,
+                                                        ArrayList<ValueRange> data) {
         List<List<Object>> values = Arrays.asList(
                 Arrays.asList(
-                        twitter,	telegram,	facebook,	slack,	reddit,	forum, github, medium, youtube, linkedin
+                        twitter, telegram, facebook, slack, reddit, forum, github, medium, youtube, linkedin
                 )
 
         );

@@ -1,6 +1,6 @@
 package com.cedricwalter.telegram.exceldbbot;
 
-import org.telegram.telegrambots.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.User;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -56,6 +56,10 @@ public class BotConfig {
 
     public List<String> getWhiteList() {
         return Arrays.asList(getProperty("whitelisted").split(","));
+    }
+
+    public List<String> getSuperUsers() {
+        return Arrays.asList(getProperty("superUsers").split(","));
     }
 
     public String getExcelImages() {

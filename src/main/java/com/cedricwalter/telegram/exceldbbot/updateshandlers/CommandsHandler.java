@@ -2,21 +2,26 @@ package com.cedricwalter.telegram.exceldbbot.updateshandlers;
 
 import com.cedricwalter.telegram.exceldbbot.BotConfig;
 import com.cedricwalter.telegram.exceldbbot.commands.*;
-import com.cedricwalter.telegram.exceldbbot.commands.InLPCommand;
-import org.telegram.telegrambots.api.methods.send.SendMessage;
-import org.telegram.telegrambots.api.objects.Message;
-import org.telegram.telegrambots.api.objects.Update;
-import org.telegram.telegrambots.api.objects.User;
-import org.telegram.telegrambots.bots.TelegramLongPollingCommandBot;
-import org.telegram.telegrambots.exceptions.TelegramApiException;
-import org.telegram.telegrambots.logging.BotLogger;
+import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Chat;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.bots.AbsSender;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.logging.BotLogger;
 
 public class CommandsHandler extends TelegramLongPollingCommandBot {
 
     public static final String LOGTAG = "COMMANDSHANDLER";
-    private BotConfig botConfig = new BotConfig();
+    private final BotConfig botConfig;
 
-    public CommandsHandler() {
+
+    public CommandsHandler(String botUsername, BotConfig botConfig) {
+        super(botUsername);
+        this.botConfig = botConfig;
+
         register(new HelloCommand());
         register(new HasEntryCommand());
 //        register(new GetCategoriesCommand());
@@ -26,10 +31,12 @@ public class CommandsHandler extends TelegramLongPollingCommandBot {
 //        register(new PNGCommand());
 //        register(new SVGCommand());
         register(new StructCommand());
-        register(new Top40Command());
+        register(new Top50Command());
         register(new InCVLCommand());
         register(new InLPCommand());
         register(new CantonCommand());
+
+        register(new UpdateSocialCommand());
 
         HelpCommand helpCommand = new HelpCommand(this);
         register(helpCommand);
@@ -39,7 +46,7 @@ public class CommandsHandler extends TelegramLongPollingCommandBot {
             commandUnknownMessage.setChatId(message.getChatId());
             commandUnknownMessage.setText("The command '" + message.getText() + "' is not known by this bot. Here comes some help ");
             try {
-                absSender.sendMessage(commandUnknownMessage);
+                absSender.execute(commandUnknownMessage);
             } catch (TelegramApiException e) {
                 BotLogger.error(LOGTAG, e);
             }
@@ -67,8 +74,9 @@ public class CommandsHandler extends TelegramLongPollingCommandBot {
                 } else {
                     echoMessage.setText("you're not authorized to use this Bot");
                 }
+
                 try {
-                    sendMessage(echoMessage);
+                    execute(echoMessage);
                 } catch (TelegramApiException e) {
                     BotLogger.error(LOGTAG, e);
                 }
@@ -76,11 +84,12 @@ public class CommandsHandler extends TelegramLongPollingCommandBot {
         }
     }
 
-    @Override
-    public String getBotUsername() {
-        BotConfig botConfig = new BotConfig();
-
-        return botConfig.getUser();
+    protected void sendMessage(AbsSender absSender, Chat chat, String text) throws TelegramApiException {
+        SendMessage answer = new SendMessage();
+        answer.setChatId(chat.getId().toString());
+        answer.enableHtml(true);
+        answer.setText(text);
+        absSender.execute(answer);
     }
 
     @Override

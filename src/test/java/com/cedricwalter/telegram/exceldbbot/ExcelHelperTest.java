@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -52,6 +53,23 @@ class ExcelHelperTest {
 
         // Assert
         assertThat(uniqueColumnValues.size(), is(2));
+    }
+
+    @Test
+    public void isWhiteListed() throws Exception {
+        String user = "oh_MG";
+
+        assertThat(isWhitelisted(user), is(true));
+    }
+
+    private boolean isWhitelisted(String user) {
+        List<String> whiteList = Arrays.asList("oh_MG,CedricWalter,GLRalf,rogerdarin,viauri,rrkubli,mathiasruch,lukasetter,Fgordillo,Superruti,bumbacher,broechner,EugenLechner,Ellabee,Vince8802,damiirux".split(","));
+        for (String name : whiteList) {
+            if (user.equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
