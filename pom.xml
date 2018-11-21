@@ -8,7 +8,8 @@
     <artifactId>exceldb-telegram-bot</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <description>Telegram bot you can ask if something is existing in an excel database, you can also add stuff</description>
+    <description>Telegram bot you can ask if something is existing in an excel database, you can also add stuff
+    </description>
     <url>https://github.com/cedricwalter/exceldb-telegram-bot</url>
 
     <licenses>
@@ -28,8 +29,10 @@
     </developers>
 
     <scm>
-        <connection>scm:git:https://github.com/cedricwalter/https://github.com/cedricwalter/exceldb-telegram-bot.git</connection>
-        <developerConnection>scm:git:https://github.com/cedricwalter/https://github.com/cedricwalter/exceldb-telegram-bot.git
+        <connection>scm:git:https://github.com/cedricwalter/https://github.com/cedricwalter/exceldb-telegram-bot.git
+        </connection>
+        <developerConnection>
+            scm:git:https://github.com/cedricwalter/https://github.com/cedricwalter/exceldb-telegram-bot.git
         </developerConnection>
         <url>https://github.com/cedricwalter/https://github.com/cedricwalter/exceldb-telegram-bot.git</url>
     </scm>
@@ -127,22 +130,22 @@
                 </executions>
             </plugin>
             <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-enforcer-plugin</artifactId>-->
-                <!--<version>1.4.1</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>enforce</id>-->
-                        <!--<goals>-->
-                            <!--<goal>enforce</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--<configuration>-->
-                    <!--<rules>-->
-                        <!--<DependencyConvergence/>-->
-                    <!--</rules>-->
-                <!--</configuration>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-enforcer-plugin</artifactId>-->
+            <!--<version>1.4.1</version>-->
+            <!--<executions>-->
+            <!--<execution>-->
+            <!--<id>enforce</id>-->
+            <!--<goals>-->
+            <!--<goal>enforce</goal>-->
+            <!--</goals>-->
+            <!--</execution>-->
+            <!--</executions>-->
+            <!--<configuration>-->
+            <!--<rules>-->
+            <!--<DependencyConvergence/>-->
+            <!--</rules>-->
+            <!--</configuration>-->
             <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -212,7 +215,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots</artifactId>
@@ -223,7 +225,7 @@
             <artifactId>telegrambotsextensions</artifactId>
             <version>${telegrambots.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
@@ -249,12 +251,11 @@
             <artifactId>jsoup</artifactId>
             <version>${jsoup.version}</version>
         </dependency>
-
-
-
-
-
-
+        <dependency>
+            <groupId>directory.cryptovalley</groupId>
+            <artifactId>market-map</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
