@@ -49,16 +49,16 @@ public class SocialScrapper {
     private static void analyzeLink(ArrayList<ValueRange> data, int i, String url) throws IOException {
         Document doc = Jsoup.connect(url).get();
 
-        String twitter = "";
-        String reddit = "";
-        String telegram = "";
-        String facebook = "";
-        String slack = "";
-        String forum = "";
-        String github = "";
-        String medium = "";
-        String youtube = "";
-        String linkedin = "";
+        String twitter = "N/A";
+        String reddit = "N/A";
+        String telegram = "N/A";
+        String facebook = "N/A";
+        String slack = "N/A";
+        String forum = "N/A";
+        String github = "N/A";
+        String medium = "N/A";
+        String youtube = "N/A";
+        String linkedin = "N/A";
 
         Elements links = doc.select("a[href]");
         for (Element link : links) {
@@ -69,9 +69,6 @@ public class SocialScrapper {
             if (href.contains("twitter")) {
                 twitter = href;
             }
-            if (href.contains("reddit")) {
-                reddit = href;
-            }
             if (href.contains("t.me")) {
                 telegram = href;
             }
@@ -81,9 +78,8 @@ public class SocialScrapper {
             if (href.contains("slack")) {
                 slack = href;
             }
-
-            if (href.contains("linkedin")) {
-                linkedin = href;
+            if (href.contains("reddit")) {
+                reddit = href;
             }
             if (href.contains("forum")) {
                 forum = href;
@@ -97,10 +93,14 @@ public class SocialScrapper {
             if (href.contains("youtube")) {
                 medium = href;
             }
+            if (href.contains("linkedin")) {
+                linkedin = href;
+            }
         }
 
         GoogleSheet.addUpdateSocial
                 (i, twitter, telegram, facebook, slack, reddit, forum, github, medium, youtube, linkedin, data);
+
     }
 
 }
