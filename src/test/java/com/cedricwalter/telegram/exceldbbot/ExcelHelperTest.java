@@ -1,12 +1,11 @@
 package com.cedricwalter.telegram.exceldbbot;
 
+import com.cedricwalter.telegram.exceldbbot.database.ExcelHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;

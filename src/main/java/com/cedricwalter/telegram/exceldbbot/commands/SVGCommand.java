@@ -1,7 +1,7 @@
-package org.telegram.commands;
+package com.cedricwalter.telegram.exceldbbot.commands;
 
-import com.cedricwalter.telegram.exceldbbot.ExcelHelper;
-import org.telegram.BotConfig;
+import com.cedricwalter.telegram.exceldbbot.database.ExcelHelper;
+import com.cedricwalter.telegram.exceldbbot.BotConfig;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
@@ -9,19 +9,16 @@ import org.telegram.telegrambots.logging.BotLogger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
-public class StructCommand extends WhiteListedUserBotCommand {
+public class SVGCommand extends WhiteListedUserBotCommand {
 
-    private static final String LOGTAG = "STRUCTCOMMAND";
+    private static final String LOGTAG = "SVGCOMMAND";
     private final BotConfig botConfig;
     private final ExcelHelper excelHelper;
 
-    public StructCommand() {
-        super("struct", "return structure");
+    public SVGCommand() {
+        super("svg", "return missing for poster");
         botConfig = new BotConfig();
         excelHelper = new ExcelHelper();
     }
@@ -31,19 +28,19 @@ public class StructCommand extends WhiteListedUserBotCommand {
         try {
             StringBuilder messageTextBuilder = new StringBuilder();
 
-            Set<String> names = excelHelper.getStruct();
-            List<String> sorted = new ArrayList<>(names.size());
-            sorted.addAll(names);
-            Collections.sort(sorted);
-            sorted.remove("category|sub-category");
-
-            for (String name : sorted) {
-                messageTextBuilder.append(name).append("\n");
+            Set<String> names = excelHelper.getUniqueColumnValues(0);
+            for (String name : names) {
+                if (!fileExistsCaseSensitive(botConfig.getSVGPath() + name.trim() + ".svg")) {
+                    System.out.println(name.trim());
+                    messageTextBuilder.append(name.trim()).append("\n");
+                }
             }
             String message = messageTextBuilder.toString();
-
-
-            sendMessage(absSender, chat, "Structure:\n" + message);
+            if (message.length() > 0) {
+                sendMessage(absSender, chat, "missing logo:\n" + message);
+            } else {
+                sendMessage(absSender, chat, "Well done!!! All logo were found!");
+            }
 
         } catch (Exception e) {
             BotLogger.error(LOGTAG, e);

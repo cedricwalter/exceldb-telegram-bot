@@ -1,9 +1,6 @@
-package com.cedricwalter.telegram.exceldbbot;
-
-import org.telegram.BotConfig;
+package com.cedricwalter.telegram.exceldbbot.database;
 
 import java.io.File;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
@@ -26,11 +23,16 @@ public class ExcelHelper {
     }
 
     public Set<String> getUniqueColumnValues(int columnIndex) throws Exception {
-        Set<String> potential = new HashSet<>();
+        Set<String> potential = new LinkedHashSet<>();
 
         List<List<Object>> rows = GoogleSheet.getCryptoValleyDirectoryRows();
         for (List<Object> row : rows) {
+            if (row.size() < columnIndex) {
+                continue;
+            }
+
             Object value = row.get(columnIndex);
+
             if (value != null) {
                 potential.add(String.valueOf(value));
             }

@@ -1,4 +1,4 @@
-package org.telegram;
+package com.cedricwalter.telegram.exceldbbot;
 
 import org.telegram.telegrambots.api.objects.User;
 

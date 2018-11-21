@@ -1,11 +1,11 @@
-package org.telegram;
+package com.cedricwalter.telegram.exceldbbot;
 
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import org.telegram.telegrambots.logging.BotLogger;
 import org.telegram.telegrambots.logging.BotsFileHandler;
-import org.telegram.updateshandlers.CommandsHandler;
+import com.cedricwalter.telegram.exceldbbot.updateshandlers.CommandsHandler;
 
 import java.io.IOException;
 import java.util.logging.ConsoleHandler;

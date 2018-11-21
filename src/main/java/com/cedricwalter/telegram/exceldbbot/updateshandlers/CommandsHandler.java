@@ -1,7 +1,8 @@
-package org.telegram.updateshandlers;
+package com.cedricwalter.telegram.exceldbbot.updateshandlers;
 
-import org.telegram.BotConfig;
-import org.telegram.commands.*;
+import com.cedricwalter.telegram.exceldbbot.BotConfig;
+import com.cedricwalter.telegram.exceldbbot.commands.*;
+import com.cedricwalter.telegram.exceldbbot.commands.InLPCommand;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;

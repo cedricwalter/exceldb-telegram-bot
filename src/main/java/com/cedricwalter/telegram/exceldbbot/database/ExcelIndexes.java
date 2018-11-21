@@ -1,4 +1,4 @@
-package com.cedricwalter.telegram.exceldbbot;
+package com.cedricwalter.telegram.exceldbbot.database;
 
 public class ExcelIndexes {
     public static final int LAT_COLUMN_INDEX = 15;

@@ -1,4 +1,4 @@
-package com.cedricwalter.telegram.exceldbbot;
+package com.cedricwalter.telegram.exceldbbot.database;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
@@ -12,10 +12,14 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
+import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
+import com.google.api.services.sheets.v4.model.BatchUpdateValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,8 +32,9 @@ public class GoogleSheet {
      * Global instance of the scopes required by this quickstart.
      * If modifying these scopes, delete your previously saved credentials/ folder.
      */
-    private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY);
-    private static final String CLIENT_SECRET_DIR = "/client_secret.json";
+    private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS
+    );
+    private static final String CLIENT_SECRET_DIR = "/client_secret.json2";
 
     private static String CRYPTOVALLEY_DIRECTORY_SHEET_ID = "1Awu0tOG8MBzWU8odiQS9LSW1Y1qqZ8QJaxn96QK87a4";
     private static String TOP30_DIRECTORY_SHEET_ID = "1cum9GOnjKZ-WiR_AiynmgjA5Jy8gL2QcMtPi974C-HU";
@@ -57,7 +62,7 @@ public class GoogleSheet {
     }
 
     public static List<List<Object>> getCryptoValleyDirectoryRows() throws Exception {
-        return getRows(CRYPTOVALLEY_DIRECTORY_SHEET_ID, "active!A:AF");
+        return getRows(CRYPTOVALLEY_DIRECTORY_SHEET_ID, "active!A:AZ");
     }
 
     public static List<List<Object>> getTop30() throws Exception {
@@ -83,4 +88,42 @@ public class GoogleSheet {
         }
     }
 
+    public static ArrayList<ValueRange>  addUpdateSocial(int i, String twitter, String reddit, String telegram, String facebook, String slack,
+                                       String forum,
+                                                         String github, String medium, String youtube,
+                                                         String linkedin,
+                                                         ArrayList<ValueRange> data) {
+        List<List<Object>> values = Arrays.asList(
+                Arrays.asList(
+                        twitter,	telegram,	facebook,	slack,	reddit,	forum, github, medium, youtube, linkedin
+                )
+
+        );
+
+        data.add(new ValueRange()
+                .setRange("active!AE" + i + ":AN" + i)
+                .setValues(values));
+        return data;
+    }
+
+    public static void update(ArrayList<ValueRange> data) throws Exception {
+        Sheets service = getService();
+
+        String valueInputOption = "RAW";
+        BatchUpdateValuesRequest body = new BatchUpdateValuesRequest()
+                .setValueInputOption(valueInputOption)
+                .setData(data);
+
+        BatchUpdateValuesResponse result =
+                service.spreadsheets().values().batchUpdate(CRYPTOVALLEY_DIRECTORY_SHEET_ID, body).execute();
+        System.out.printf("%d cells updated.", result.getTotalUpdatedCells());
+    }
+
+    private static Sheets getService() throws Exception {
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+
+        return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+    }
 }

@@ -1,4 +1,4 @@
-package org.telegram.commands;
+package com.cedricwalter.telegram.exceldbbot.commands;
 
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;

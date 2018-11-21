@@ -1,8 +1,7 @@
-package org.telegram.commands;
+package com.cedricwalter.telegram.exceldbbot.commands;
 
-import com.cedricwalter.telegram.exceldbbot.ExcelHelper;
-import com.cedricwalter.telegram.exceldbbot.ExcelIndexes;
-import org.telegram.BotConfig;
+import com.cedricwalter.telegram.exceldbbot.database.ExcelHelper;
+import com.cedricwalter.telegram.exceldbbot.BotConfig;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.AbsSender;
@@ -12,14 +11,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-public class InCVLCommand extends WhiteListedUserBotCommand {
+public class PNGCommand extends WhiteListedUserBotCommand {
 
-    private static final String LOGTAG = "CVLCOMMAND";
+    private static final String LOGTAG = "LOGOCOMMAND";
     private final BotConfig botConfig;
     private final ExcelHelper excelHelper;
 
-    public InCVLCommand() {
-        super("inCVL", "return list of companies in CryptoValley Labs");
+    public PNGCommand() {
+        super("logo", "return logo missing");
         botConfig = new BotConfig();
         excelHelper = new ExcelHelper();
     }
@@ -29,20 +28,19 @@ public class InCVLCommand extends WhiteListedUserBotCommand {
         try {
             StringBuilder messageTextBuilder = new StringBuilder();
 
-            Set<String> names = excelHelper.getNameForColumnMatching(ExcelIndexes.IN_CVL_COLUMN_INDEX, "TRUE");
-            int i = 1;
+            Set<String> names = excelHelper.getUniqueColumnValues( 0);
             for (String name : names) {
-                messageTextBuilder.append(" " + i++ + " " + name.trim()).append("\n");
-
-                if (i == 10) {
-                    sendMessage(absSender, chat, "In CryptoValley Labs:\n" + messageTextBuilder.toString());
-                    messageTextBuilder = new StringBuilder();
-                } else if (i % 10 == 0) {
-                    sendMessage(absSender, chat, messageTextBuilder.toString());
-                    messageTextBuilder = new StringBuilder();
+                if (!fileExistsCaseSensitive(botConfig.getLogoPath() + name.trim() + ".png")) {
+                    messageTextBuilder.append(name.trim() + ".png").append("\n");
                 }
-
             }
+            String message = messageTextBuilder.toString();
+            if (message.length() > 0) {
+                sendMessage(absSender, chat, "missing logo:\n" + message);
+            } else {
+                sendMessage(absSender, chat, "Well done!!! All logo were found!");
+            }
+
         } catch (Exception e) {
             BotLogger.error(LOGTAG, e);
         }

@@ -68,7 +68,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.telegram.Main</mainClass>
+                            <mainClass>com.cedricwalter.telegram.exceldbbot.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -107,7 +107,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>org.telegram.Main</mainClass>
+                            <mainClass>com.cedricwalter.telegram.exceldbbot.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
