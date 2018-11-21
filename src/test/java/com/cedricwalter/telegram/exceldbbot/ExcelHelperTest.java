@@ -1,6 +1,7 @@
 package com.cedricwalter.telegram.exceldbbot;
 
 import com.cedricwalter.telegram.exceldbbot.database.ExcelHelper;
+import com.cedricwalter.telegram.exceldbbot.database.GoogleSheet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +30,7 @@ class ExcelHelperTest {
     public void withIndexExcel_hasEntry_expectEntryNotFound() throws Exception {
         // Arrange
         // Act
-        Set<List<Object>> rows = excelHelper.hasEntry("anything-not-in-excel");
+        Set<List<Object>> rows = excelHelper.hasEntry("anything-not-in-excel", GoogleSheet.getSwissRows());
 
         // Assert
         assertTrue(rows.size() == 0);
@@ -39,7 +40,7 @@ class ExcelHelperTest {
     public void withIndexExcel_hasEntry_expectEntryFound() throws Exception {
         // Arrange
         // Act
-        Set<List<Object>> rows = excelHelper.hasEntry("cedric");
+        Set<List<Object>> rows = excelHelper.hasEntry("cedric", GoogleSheet.getSwissRows());
 
         // Assert
         assertTrue(rows.size() > 0);
