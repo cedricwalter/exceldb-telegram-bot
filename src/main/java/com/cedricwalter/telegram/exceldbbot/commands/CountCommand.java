@@ -26,7 +26,6 @@ public class CountCommand extends WhiteListedUserBotCommand {
     @Override
     public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) {
         try {
-
             sendMessage(absSender, chat, "We have currently " + GoogleSheet.getSwissRows().size() + " entrie(s) in Switzerland.");
             sendMessage(absSender, chat, "We have currently " + GoogleSheet.getSingaporeRows().size() + " entrie(s) in Singapore.");
         } catch (TelegramApiException e) {

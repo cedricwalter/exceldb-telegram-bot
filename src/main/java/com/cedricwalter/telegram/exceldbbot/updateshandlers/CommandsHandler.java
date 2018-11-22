@@ -24,12 +24,8 @@ public class CommandsHandler extends TelegramLongPollingCommandBot {
 
         register(new HelloCommand());
         register(new HasEntryCommand());
-//        register(new GetCategoriesCommand());
-//        register(new GetSubCategoriesCommand());
         register(new CountCommand());
         register(new StatsCommand());
-//        register(new PNGCommand());
-//        register(new SVGCommand());
         register(new StructCommand());
         register(new Top50Command());
         register(new InCVLCommand());
@@ -86,7 +82,7 @@ public class CommandsHandler extends TelegramLongPollingCommandBot {
         }
     }
 
-    protected void sendMessage(AbsSender absSender, Chat chat, String text) throws TelegramApiException {
+    public static void sendMessage(AbsSender absSender, Chat chat, String text) throws TelegramApiException {
         SendMessage answer = new SendMessage();
         answer.setChatId(chat.getId().toString());
         answer.enableHtml(true);

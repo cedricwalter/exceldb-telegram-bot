@@ -1,7 +1,9 @@
 package com.cedricwalter.telegram.exceldbbot.commands;
 
 import com.cedricwalter.telegram.exceldbbot.BotConfig;
+import com.cedricwalter.telegram.exceldbbot.updateshandlers.CommandsHandler;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.BotCommand;
+import org.telegram.telegrambots.extensions.bots.commandbot.commands.CommandRegistry;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -36,10 +38,6 @@ public abstract class WhiteListedUserBotCommand extends BotCommand {
     public abstract void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] strings) throws Exception;
 
     protected void sendMessage(AbsSender absSender, Chat chat, String text) throws TelegramApiException {
-        SendMessage answer = new SendMessage();
-        answer.setChatId(chat.getId().toString());
-        answer.enableHtml(true);
-        answer.setText(text);
-        absSender.execute(answer);
+        CommandsHandler.sendMessage(absSender,chat, text);
     }
 }

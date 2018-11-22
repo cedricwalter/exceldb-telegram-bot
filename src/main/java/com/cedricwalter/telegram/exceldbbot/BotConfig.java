@@ -32,20 +32,19 @@ public class BotConfig {
         return getProperty("user");
     }
 
-    public String getLogoPath() {
-        return getProperty("excelImages");
-    }
-
-    public String getExcel() {
-        return getProperty("excel");
-    }
-
     public String getToken() {
         return getProperty("token");
     }
 
     public boolean isInWhiteList(User user) {
-        List<String> whiteList = getWhiteList();
+        return isInList(user, getWhiteList());
+    }
+
+    public boolean isSuperUser(User user) {
+        return isInList(user, getSuperUsers());
+    }
+
+    private boolean isInList(User user, List<String> whiteList) {
         for (String name : whiteList) {
             if (user.getUserName().equals(name)) {
                 return true;
@@ -62,11 +61,4 @@ public class BotConfig {
         return Arrays.asList(getProperty("superUsers").split(","));
     }
 
-    public String getExcelImages() {
-        return getProperty("excelImages");
-    }
-
-    public String getSVGPath() {
-        return getProperty("svgImages");
-    }
 }
