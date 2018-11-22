@@ -46,6 +46,7 @@ public class HasEntryCommand extends WhiteListedUserBotCommand {
                         rowList = rowList.subList(0, 10);
                     }
 
+                    sendMessage(absSender, chat, "In Switzerland, found :");
                     for (String result : rowList) {
                         sendMessage(absSender, chat, result);
                     }
@@ -60,6 +61,7 @@ public class HasEntryCommand extends WhiteListedUserBotCommand {
                         rowList = rowList.subList(0, 10);
                     }
 
+                    sendMessage(absSender, chat, "In Singapore, found :");
                     for (String result : rowList) {
                         sendMessage(absSender, chat, result);
                     }

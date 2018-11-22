@@ -119,7 +119,7 @@ public class ExcelHelper {
         str.append("  |  ");
     }
 
-    public Map<String, String> getStats() throws Exception {
+    public Map<String, String> getStats(List<List<Object>> rows) throws Exception {
         Map statistics = new TreeMap();
 
         long missingCategoryCounter = 0;
@@ -130,21 +130,6 @@ public class ExcelHelper {
         long missingLatCounter = 0;
         long missingLongCounter = 0;
         long missingLogo = 0;
-
-        List<List<Object>> rows = GoogleSheet.getSwissRows();
-
-//        StringBuilder missingLogoNames = new StringBuilder();
-//        Set<String> names = getUniqueColumnValues(0);
-//        for (String name : names) {
-//            String trim = name.trim();
-//
-//            if (!exists("https://cryptovalley.directory/svg/" + trim + ".svg")) {
-//                if (!exists("https://cryptovalley.directory/logo/" + trim + ".png")) {
-//                    missingLogoNames.append(trim + ".png").append("\n");
-//                    missingLogo++;
-//                }
-//            }
-//        }
 
         StringBuilder missingAddresses = new StringBuilder();
         StringBuilder missingLat = new StringBuilder();
@@ -226,10 +211,13 @@ public class ExcelHelper {
 
 
     private long incrementCounterIfStringEmpty(List<Object> currentRow, int column) {
-        String string = java.lang.String.valueOf(currentRow.get(column));
         long index = 0;
-        if ("".equals(string)) {
-            index++;
+        if (currentRow.size() > column) {
+            String string = java.lang.String.valueOf(currentRow.get(column));
+
+            if ("".equals(string)) {
+                index++;
+            }
         }
 
         return index;

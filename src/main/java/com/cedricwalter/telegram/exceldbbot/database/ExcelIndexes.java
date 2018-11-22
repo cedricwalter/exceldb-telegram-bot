@@ -1,7 +1,7 @@
 package com.cedricwalter.telegram.exceldbbot.database;
 
 public class ExcelIndexes {
-    public static final int LAT_COLUMN_INDEX = 15;
+    public static final int LAT_COLUMN_INDEX = 14;
     public static final int NAME_COLUMN_INDEX = 0;
     public static final int DESCRIPTION_COLUMN_INDEX = 5;
     public static final int URL_COLUMN_INDEX = 3;
@@ -16,6 +16,6 @@ public class ExcelIndexes {
     public static final int IN_LP_COLUMN_INDEX = 31;
 
     public static final int ADDRESS1_COLUMN_INDEX = 7;
-    public static final int LONG_COLUMN_INDEX = 16;
+    public static final int LONG_COLUMN_INDEX = 15;
     public static final int ADDRESS2_COLUMN_INDEX = 8;
 }

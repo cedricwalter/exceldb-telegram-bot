@@ -20,7 +20,7 @@ public class Top50Command extends WhiteListedUserBotCommand {
     private final ExcelHelper excelHelper;
 
     public Top50Command() {
-        super("top50", "return top 40 companies");
+        super("top50", "return top 50 companies");
         botConfig = new BotConfig();
         excelHelper = new ExcelHelper();
     }

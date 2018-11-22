@@ -68,9 +68,8 @@ public class GoogleSheet {
     }
 
     public static List<List<Object>> getSingaporeRows() throws Exception {
-        return getRows(SWISS_SHEET_ID, "active!A:AZ");
+        return getRows(SINGAPORE_SHEET_ID, "active!A:AZ");
     }
-
 
     public static List<List<Object>> getTop30() throws Exception {
         return getRows(TOP30_DIRECTORY_SHEET_ID, "TOP 40 - active!A:AA");
