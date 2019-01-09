@@ -1,6 +1,6 @@
 package com.cedricwalter.telegram.exceldbbot.scrapper;
 
-import com.cedricwalter.telegram.exceldbbot.database.ExcelHelper;
+import com.cedricwalter.telegram.exceldbbot.database.ExcelColumnNumber;
 import com.cedricwalter.telegram.exceldbbot.database.ExcelIndexes;
 import com.cedricwalter.telegram.exceldbbot.database.GoogleSheet;
 import com.google.api.services.sheets.v4.model.ValueRange;
@@ -9,29 +9,43 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class SocialScrapper {
-    static int linkCount = 0;
-    static int errors = 0;
+
+    private static String sheetId = GoogleSheet.SINGAPORE_SHEET_ID;
+    //private static String sheetId = GoogleSheet.SWISS_SHEET_ID;
+
+    private int linkCount = 0;
+    private int errors = 0;
 
     public static void main(String[] args) throws Exception {
-        ArrayList<ValueRange> data = new ArrayList<>();
-        ExcelHelper excelHelper = new ExcelHelper();
+        new SocialScrapper().analyze(GoogleSheet.getSingaporeRows());
+    }
 
-        int i = 2; // jump header
-        Set<String> urls = excelHelper.getUniqueColumnValues(ExcelIndexes.URL_COLUMN_INDEX);
-        for (String url : urls) {
-
-            if (url.trim().isEmpty() || url.equals("Webpage")) {
-                continue;
-            }
-
+    private void analyze(List<List<Object>> rows) throws Exception {
+        int i = 1; // jump headers
+        rows = rows.subList(1, rows.size());
+        for (List<Object> row : rows) {
             try {
-                analyzeLink(data, i, url);
+                ArrayList<ValueRange> data = new ArrayList<>();
+
+                String webpage = getSafeValue(row, ExcelIndexes.webpage);
+
+                if (webpage.contains("crunchbase") ||
+                        webpage.contains("linked") ||
+                        webpage.contains("N/A")) {
+                    System.err.println("Not enough data for " + getSafeValue(row, ExcelIndexes.name) + " to get eocial and email links");
+                } else {
+                    analyzeLink(data, i, webpage);
+
+                }
+
+
+                linkCount++;
             } catch (Exception e) {
                 System.err.println(e);
                 errors++;
@@ -39,13 +53,14 @@ public class SocialScrapper {
             i++;
         }
 
-        GoogleSheet.update(data);
-
-        System.out.println("analyzed  " + linkCount + " links and found " + errors + " errors");
-
+        System.out.println("analyzed  " + i + " entries " + linkCount + " added and found " + errors + " errors");
     }
 
-    private static void analyzeLink(ArrayList<ValueRange> data, int i, String url) throws IOException {
+    private String getSafeValue(List<Object> row, int columnIndex) {
+        return row.size() >= columnIndex ? row.get(columnIndex).toString() : "";
+    }
+
+    private void analyzeLink(ArrayList<ValueRange> data, int i, String url) throws Exception {
         Document doc = Jsoup.connect(url).get();
 
         String twitter = "N/A";
@@ -58,14 +73,15 @@ public class SocialScrapper {
         String medium = "N/A";
         String youtube = "N/A";
         String linkedin = "N/A";
+        String email = "N/A";
 
         Elements links = doc.select("a[href]");
         for (Element link : links) {
 
             linkCount++;
 
-            String href = link.attr("abs:href").toString();
-            if (href.contains("twitter")) {
+            String href = link.attr("abs:href");
+            if (href.contains("https://twitter.com")) {
                 twitter = href;
             }
             if (href.contains("t.me")) {
@@ -83,7 +99,7 @@ public class SocialScrapper {
             if (href.contains("forum")) {
                 forum = href;
             }
-            if (href.contains("github")) {
+            if (href.contains("github.com")) {
                 github = href;
             }
             if (href.contains("medium")) {
@@ -92,14 +108,25 @@ public class SocialScrapper {
             if (href.contains("youtube")) {
                 medium = href;
             }
-            if (href.contains("linkedin")) {
+            if (href.contains("linkedin.com")) {
                 linkedin = href;
+            }
+            if (href.contains("mailto:")) {
+                email = href;
             }
         }
 
-        GoogleSheet.addUpdateSocial
-                (i, twitter, telegram, facebook, slack, reddit, forum, github, medium, youtube, linkedin, data);
+        List<List<Object>> values = Arrays.asList(
+                Arrays.asList(
+                        twitter, telegram, facebook, slack, reddit, forum, github, medium, youtube, linkedin
+                )
 
+        );
+
+        data.add(new ValueRange()
+                .setRange("active!" + ExcelColumnNumber.toName(ExcelIndexes.twitter) + i + ":" + ExcelColumnNumber.toName(ExcelIndexes.linkedin) + i)
+                .setValues(values));
+        GoogleSheet.update(data, sheetId);
     }
 
 }

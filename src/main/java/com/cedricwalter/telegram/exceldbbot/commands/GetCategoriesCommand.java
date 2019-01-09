@@ -2,6 +2,7 @@ package com.cedricwalter.telegram.exceldbbot.commands;
 
 import com.cedricwalter.telegram.exceldbbot.BotConfig;
 import com.cedricwalter.telegram.exceldbbot.database.ExcelHelper;
+import com.cedricwalter.telegram.exceldbbot.database.GoogleSheet;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
@@ -26,7 +27,7 @@ public class GetCategoriesCommand extends WhiteListedUserBotCommand {
     public void executeWhiteListedUser(AbsSender absSender, User user, Chat chat, String[] arguments) {
         try {
             System.out.println(String.format("GetCat from %s", user.getUserName()));
-            Set<String> categories = excelHelper.getUniqueColumnValues(1);
+            Set<String> categories = excelHelper.getUniqueColumnValues(1, GoogleSheet.getSwissRows());
 
             StringBuilder stringBuilder = new StringBuilder();
             for (String category : categories) {

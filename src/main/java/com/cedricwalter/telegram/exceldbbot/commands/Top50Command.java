@@ -52,9 +52,9 @@ public class Top50Command extends WhiteListedUserBotCommand {
 
         List<List<Object>> rows = GoogleSheet.getTop30();
         for (List<Object> row : rows) {
-            potential.add(ExcelHelper.getValueSafe(row, ExcelIndexes.NAME_COLUMN_INDEX) + " (" +
+            potential.add(ExcelHelper.getValueSafe(row, ExcelIndexes.name) + " (" +
                     ExcelHelper.getValueSafe(row, ExcelIndexes.CATEGORY_COLUMN_INDEX) + "/" +
-                    ExcelHelper.getValueSafe(row, ExcelIndexes.SUBCATEGORY_COLUMN_INDEX) + ")"
+                    ExcelHelper.getValueSafe(row, ExcelIndexes.SUB_CATEGORY_COLUMN_INDEX) + ")"
             );
         }
         return potential;

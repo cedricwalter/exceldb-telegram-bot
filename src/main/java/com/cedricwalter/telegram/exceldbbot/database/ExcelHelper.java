@@ -14,7 +14,7 @@ public class ExcelHelper {
         List<List<Object>> rows = GoogleSheet.getSwissRows();
         for (List<Object> row : rows) {
             String category = getValueSafe(row, ExcelIndexes.CATEGORY_COLUMN_INDEX);
-            String subcategory = getValueSafe(row, ExcelIndexes.SUBCATEGORY_COLUMN_INDEX);
+            String subcategory = getValueSafe(row, ExcelIndexes.SUB_CATEGORY_COLUMN_INDEX);
             if (category != null) {
                 potential.add(category.replaceAll(" ", "-") + "|" + subcategory.replaceAll(" ", "-"));
             }
@@ -22,10 +22,26 @@ public class ExcelHelper {
         return potential;
     }
 
-    public Set<String> getUniqueColumnValues(int columnIndex) throws Exception {
+    public List<String> geColumnValues(int columnIndex, List<List<Object>> rows) throws Exception {
+        List<String> potential = new LinkedList<>();
+
+        for (List<Object> row : rows) {
+            if (row.size() < columnIndex) {
+                continue;
+            }
+
+            Object value = row.get(columnIndex);
+
+            if (value != null) {
+                potential.add(String.valueOf(value));
+            }
+        }
+        return potential;
+    }
+
+    public Set<String> getUniqueColumnValues(int columnIndex, List<List<Object>> rows) throws Exception {
         Set<String> potential = new LinkedHashSet<>();
 
-        List<List<Object>> rows = GoogleSheet.getSwissRows();
         for (List<Object> row : rows) {
             if (row.size() < columnIndex) {
                 continue;
@@ -48,9 +64,9 @@ public class ExcelHelper {
 
             String match = getValueSafe(row, columnIndex);
             if (match.equals(value)) {
-                potential.add(getValueSafe(row, ExcelIndexes.NAME_COLUMN_INDEX) + " (" +
+                potential.add(getValueSafe(row, ExcelIndexes.name) + " (" +
                         getValueSafe(row, ExcelIndexes.CATEGORY_COLUMN_INDEX) + "/" +
-                        getValueSafe(row, ExcelIndexes.SUBCATEGORY_COLUMN_INDEX) + ")"
+                        getValueSafe(row, ExcelIndexes.SUB_CATEGORY_COLUMN_INDEX) + ")"
                 );
             }
 
@@ -71,8 +87,8 @@ public class ExcelHelper {
 
         for (List<Object> row : source) {
 
-            String nameString = getValueSafe(row, ExcelIndexes.NAME_COLUMN_INDEX);
-            String urlString = getValueSafe(row, ExcelIndexes.URL_COLUMN_INDEX);
+            String nameString = getValueSafe(row, ExcelIndexes.name);
+            String urlString = getValueSafe(row, ExcelIndexes.webpage);
 
             if (nameString != null && urlString != null) {
 
@@ -102,10 +118,10 @@ public class ExcelHelper {
         //str.append("Too much results (" + rows.size() + "), displaying in condensed form\n\n");
         for (List<Object> row : rows) {
             StringBuilder str = new StringBuilder();
-            appendIfNotNull(str, getValueSafe(row, ExcelIndexes.NAME_COLUMN_INDEX));
+            appendIfNotNull(str, getValueSafe(row, ExcelIndexes.name));
             appendIfNotNull(str, getValueSafe(row, ExcelIndexes.CATEGORY_COLUMN_INDEX));
-            appendIfNotNull(str, getValueSafe(row, ExcelIndexes.SUBCATEGORY_COLUMN_INDEX));
-            appendIfNotNull(str, getValueSafe(row, ExcelIndexes.URL_COLUMN_INDEX));
+            appendIfNotNull(str, getValueSafe(row, ExcelIndexes.SUB_CATEGORY_COLUMN_INDEX));
+            appendIfNotNull(str, getValueSafe(row, ExcelIndexes.webpage));
             appendIfNotNull(str, getValueSafe(row, ExcelIndexes.MOTTO_COLUMN_INDEX));
             appendIfNotNull(str, getValueSafe(row, ExcelIndexes.DESCRIPTION_COLUMN_INDEX));
             rowList.add(str.toString());
@@ -141,11 +157,11 @@ public class ExcelHelper {
         for (List<Object> currentRow : rows) {
 
             missingCategoryCounter = report(missingCategoryCounter, missingCategory, currentRow, ExcelIndexes.CATEGORY_COLUMN_INDEX);
-            missingSubcategoryCounter = report(missingSubcategoryCounter, missingSubCategory, currentRow, ExcelIndexes.SUBCATEGORY_COLUMN_INDEX);
+            missingSubcategoryCounter = report(missingSubcategoryCounter, missingSubCategory, currentRow, ExcelIndexes.SUB_CATEGORY_COLUMN_INDEX);
             missingMottoCounter = report(missingMottoCounter, missingMotto, currentRow, ExcelIndexes.MOTTO_COLUMN_INDEX);
             missingDescriptionCounter = report(missingDescriptionCounter, missingDescription, currentRow, ExcelIndexes.DESCRIPTION_COLUMN_INDEX);
 
-            missingAddressesCounter = report(missingAddressesCounter, missingAddresses, currentRow, ExcelIndexes.ADDRESS3_COLUMN_INDEX);
+            missingAddressesCounter = report(missingAddressesCounter, missingAddresses, currentRow, ExcelIndexes.zipcodeCountry);
             missingLatCounter = report(missingLatCounter, missingLat, currentRow, ExcelIndexes.LAT_COLUMN_INDEX);
             missingLongCounter = report(missingLongCounter, missingLong, currentRow, ExcelIndexes.LONG_COLUMN_INDEX);
         }

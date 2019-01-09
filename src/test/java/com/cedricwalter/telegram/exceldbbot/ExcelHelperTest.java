@@ -50,7 +50,7 @@ class ExcelHelperTest {
     public void withIndexExcel_getCat_expectCategoriesFound() throws Exception {
         // Arrange
         // Act
-        Set<String> uniqueColumnValues = excelHelper.getUniqueColumnValues(CATEGORY_COLUMN_INDEX);
+        Set<String> uniqueColumnValues = excelHelper.getUniqueColumnValues(CATEGORY_COLUMN_INDEX, GoogleSheet.getSwissRows());
 
         // Assert
         assertThat(uniqueColumnValues.size(), is(2));

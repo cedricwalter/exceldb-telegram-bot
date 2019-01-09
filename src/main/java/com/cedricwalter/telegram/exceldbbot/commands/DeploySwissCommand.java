@@ -41,15 +41,4 @@ public class DeploySwissCommand extends WhiteListedUserBotCommand {
             BotLogger.error(LOGTAG, e);
         }
     }
-
-    public static boolean fileExistsCaseSensitive(String path) {
-        try {
-            File file = new File(path);
-            return file.exists() && file.getCanonicalFile().getName().equals(file.getName());
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-
 }

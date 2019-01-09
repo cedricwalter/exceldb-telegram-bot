@@ -36,8 +36,8 @@ public class GoogleSheet {
     );
     private static final String CLIENT_SECRET_DIR = "/client_secret.json2";
 
-    private static String SWISS_SHEET_ID = "1Awu0tOG8MBzWU8odiQS9LSW1Y1qqZ8QJaxn96QK87a4";
-    private static String SINGAPORE_SHEET_ID = "1p9EnDgNa4zzcAJvLQHhcbdReYD3_hwTBQThCgqJRXrY";
+    public static String SWISS_SHEET_ID = "1Awu0tOG8MBzWU8odiQS9LSW1Y1qqZ8QJaxn96QK87a4";
+    public static String SINGAPORE_SHEET_ID = "1p9EnDgNa4zzcAJvLQHhcbdReYD3_hwTBQThCgqJRXrY";
 
     private static String TOP30_DIRECTORY_SHEET_ID = "1cum9GOnjKZ-WiR_AiynmgjA5Jy8gL2QcMtPi974C-HU";
 
@@ -64,11 +64,17 @@ public class GoogleSheet {
     }
 
     public static List<List<Object>> getSwissRows() throws Exception {
-        return getRows(SWISS_SHEET_ID, "active!A:AZ");
+        List<List<Object>> rows = getRows(SWISS_SHEET_ID, "active!A:AZ");
+        ExcelIndexes.buildIndex(rows.get(0));
+
+        return rows;
     }
 
     public static List<List<Object>> getSingaporeRows() throws Exception {
-        return getRows(SINGAPORE_SHEET_ID, "active!A:AZ");
+        List<List<Object>> list = getRows(SINGAPORE_SHEET_ID, "active!A:AZ");
+        ExcelIndexes.buildIndex(list.get(0));
+        return list;
+
     }
 
     public static List<List<Object>> getTop30() throws Exception {
@@ -94,32 +100,9 @@ public class GoogleSheet {
         }
     }
 
-    public static ArrayList<ValueRange> addUpdateSocial(int i,
-                                                        String twitter,
-                                                        String telegram,
-                                                        String facebook,
-                                                        String slack,
-                                                        String reddit,
-                                                        String forum,
-                                                        String github,
-                                                        String medium,
-                                                        String youtube,
-                                                        String linkedin,
-                                                        ArrayList<ValueRange> data) {
-        List<List<Object>> values = Arrays.asList(
-                Arrays.asList(
-                        twitter, telegram, facebook, slack, reddit, forum, github, medium, youtube, linkedin
-                )
 
-        );
 
-        data.add(new ValueRange()
-                .setRange("active!AE" + i + ":AN" + i)
-                .setValues(values));
-        return data;
-    }
-
-    public static void update(ArrayList<ValueRange> data) throws Exception {
+    public static void update(ArrayList<ValueRange> data, String swissSheetId) throws Exception {
         Sheets service = getService();
 
         String valueInputOption = "RAW";
@@ -128,8 +111,8 @@ public class GoogleSheet {
                 .setData(data);
 
         BatchUpdateValuesResponse result =
-                service.spreadsheets().values().batchUpdate(SWISS_SHEET_ID, body).execute();
-        System.out.printf("%d cells updated.", result.getTotalUpdatedCells());
+                service.spreadsheets().values().batchUpdate(swissSheetId, body).execute();
+        // System.out.println(result.getTotalUpdatedCells() + " cells updated.");
     }
 
     private static Sheets getService() throws Exception {
