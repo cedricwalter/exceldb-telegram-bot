@@ -38,6 +38,7 @@ public class GoogleSheet {
 
     public static String SWISS_SHEET_ID = "1Awu0tOG8MBzWU8odiQS9LSW1Y1qqZ8QJaxn96QK87a4";
     public static String SINGAPORE_SHEET_ID = "1p9EnDgNa4zzcAJvLQHhcbdReYD3_hwTBQThCgqJRXrY";
+    public static String DUBAI_SHEET_ID = "19M95TMUHjwn5tpmo6LuazXBKS1y2iDsfz7BAVtKDnWk";
 
     private static String TOP30_DIRECTORY_SHEET_ID = "1cum9GOnjKZ-WiR_AiynmgjA5Jy8gL2QcMtPi974C-HU";
 
@@ -74,7 +75,12 @@ public class GoogleSheet {
         List<List<Object>> list = getRows(SINGAPORE_SHEET_ID, "active!A:AZ");
         ExcelIndexes.buildIndex(list.get(0));
         return list;
+    }
 
+    public static List<List<Object>> getDubaiRows() throws Exception {
+        List<List<Object>> list = getRows(DUBAI_SHEET_ID, "active!A:AZ");
+        ExcelIndexes.buildIndex(list.get(0));
+        return list;
     }
 
     public static List<List<Object>> getTop30() throws Exception {

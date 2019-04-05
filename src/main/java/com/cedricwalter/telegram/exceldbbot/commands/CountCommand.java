@@ -28,6 +28,7 @@ public class CountCommand extends WhiteListedUserBotCommand {
         try {
             sendMessage(absSender, chat, "We have currently " + GoogleSheet.getSwissRows().size() + " entrie(s) in Switzerland.");
             sendMessage(absSender, chat, "We have currently " + GoogleSheet.getSingaporeRows().size() + " entrie(s) in Singapore.");
+            sendMessage(absSender, chat, "We have currently " + GoogleSheet.getDubaiRows().size() + " entrie(s) in Dubai.");
         } catch (TelegramApiException e) {
             BotLogger.error(LOGTAG, e);
         } catch (Exception e) {

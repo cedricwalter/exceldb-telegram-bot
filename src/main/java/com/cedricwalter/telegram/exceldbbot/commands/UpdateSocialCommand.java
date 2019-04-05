@@ -1,6 +1,6 @@
 package com.cedricwalter.telegram.exceldbbot.commands;
 
-import com.cedricwalter.telegram.exceldbbot.scrapper.SocialScrapper;
+import com.cedricwalter.telegram.exceldbbot.scrapper.social.SocialScrapper;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.bots.AbsSender;
@@ -18,7 +18,7 @@ public class UpdateSocialCommand extends SuperUserBotCommand {
     public void executeSuperdUser(AbsSender absSender, User user, Chat chat, String[] arguments) {
         try {
             sendMessage(absSender, chat, "Starting Import");
-            SocialScrapper.main(null);
+            //SocialScrapper.main(null);
             sendMessage(absSender, chat, "Import done");
         } catch (Exception e) {
             BotLogger.error(LOGTAG, e);

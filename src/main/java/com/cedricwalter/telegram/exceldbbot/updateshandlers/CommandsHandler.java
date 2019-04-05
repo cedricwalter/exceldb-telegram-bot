@@ -32,9 +32,9 @@ public class CommandsHandler extends TelegramLongPollingCommandBot {
         register(new InLPCommand());
         register(new CantonCommand());
 
-        register(new UpdateSocialCommand());
-        register(new DeploySwissCommand());
-        register(new DeploySingaporeCommand());
+        //register(new UpdateSocialCommand());
+//        register(new DeploySwissCommand());
+//        register(new DeploySingaporeCommand());
 
         HelpCommand helpCommand = new HelpCommand(this);
         register(helpCommand);

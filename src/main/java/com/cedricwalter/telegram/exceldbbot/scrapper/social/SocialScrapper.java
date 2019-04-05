@@ -1,4 +1,4 @@
-package com.cedricwalter.telegram.exceldbbot.scrapper;
+package com.cedricwalter.telegram.exceldbbot.scrapper.social;
 
 import com.cedricwalter.telegram.exceldbbot.database.ExcelColumnNumber;
 import com.cedricwalter.telegram.exceldbbot.database.ExcelIndexes;
@@ -16,38 +16,34 @@ import java.util.List;
 
 public class SocialScrapper {
 
-    private static String sheetId = GoogleSheet.SINGAPORE_SHEET_ID;
-    //private static String sheetId = GoogleSheet.SWISS_SHEET_ID;
-
     private int linkCount = 0;
     private int errors = 0;
 
-    public static void main(String[] args) throws Exception {
-        new SocialScrapper().analyze(GoogleSheet.getSingaporeRows());
-    }
+    protected void analyze(List<List<Object>> rows, String sheetId) throws Exception {
 
-    private void analyze(List<List<Object>> rows) throws Exception {
-        int i = 1; // jump headers
+        String webpage = "";
+        int i = 2; // jump headers
         rows = rows.subList(1, rows.size());
         for (List<Object> row : rows) {
             try {
                 ArrayList<ValueRange> data = new ArrayList<>();
 
-                String webpage = getSafeValue(row, ExcelIndexes.webpage);
+                webpage = getSafeValue(row, ExcelIndexes.webpage);
+                String twitter = getSafeValue(row, ExcelIndexes.twitter);
 
                 if (webpage.contains("crunchbase") ||
                         webpage.contains("linked") ||
                         webpage.contains("N/A")) {
-                    System.err.println("Not enough data for " + getSafeValue(row, ExcelIndexes.name) + " to get eocial and email links");
+                    System.err.println("Not enough data for " + getSafeValue(row, ExcelIndexes.name) + " to get social and email links");
                 } else {
-                    analyzeLink(data, i, webpage);
-
+                    if (twitter.length() == 0) {
+                        analyzeLink(data, i, webpage, sheetId);
+                        linkCount++;
+                    }
                 }
-
-
-                linkCount++;
+                System.out.print(".");
             } catch (Exception e) {
-                System.err.println(e);
+                System.err.println("webpage " + webpage + e);
                 errors++;
             }
             i++;
@@ -57,10 +53,14 @@ public class SocialScrapper {
     }
 
     private String getSafeValue(List<Object> row, int columnIndex) {
-        return row.size() >= columnIndex ? row.get(columnIndex).toString() : "";
+        try {
+            return row.size() >= columnIndex ? row.get(columnIndex).toString() : "";
+        } catch(Exception e) {
+            return "";
+        }
     }
 
-    private void analyzeLink(ArrayList<ValueRange> data, int i, String url) throws Exception {
+    private void analyzeLink(ArrayList<ValueRange> data, int i, String url, String sheetId) throws Exception {
         Document doc = Jsoup.connect(url).get();
 
         String twitter = "N/A";
@@ -112,9 +112,12 @@ public class SocialScrapper {
                 linkedin = href;
             }
             if (href.contains("mailto:")) {
-                email = href;
+                email = href.replaceAll("mailto:", "");
+
             }
         }
+
+        System.out.println(email);
 
         List<List<Object>> values = Arrays.asList(
                 Arrays.asList(
